@@ -6,7 +6,10 @@ class ApiUrl{
   static const verifyOtpApi = "${baseUrl}otpverify";
   static const resetOtpApi = "${baseUrl}resetpassword";
   static const resetPasswordApi = "${baseUrl}resetpassword";
+  static const signupOTPApi = "${baseUrl}emailotpverify";
   // static const resetPasswordApi = "${baseUrl}resetpassword";
   static const profile = "${baseUrl}profile";
   static const updateProfile = "${baseUrl}updateprofile";
+  static const addFamilyMember = "${baseUrl}addmember";
+
 }

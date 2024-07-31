@@ -1,10 +1,7 @@
-import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:developer' as dev;
-
 import 'login_screen.dart';
 import 'onboard_data.dart';
 
@@ -21,11 +18,16 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   final RxInt _pageIndex = 0.obs;
 
 
+
+
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
+
   }
+
+
 
   @override
   void dispose() {

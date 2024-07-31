@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -8,6 +7,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:Safeplate/resources/dimension.dart';
 import 'package:Safeplate/widget/custom_textfield.dart';
+
+import '../repo/addnew_family_repo.dart';
+import '../widget/helper.dart';
 
 class AddFamilyMember extends StatefulWidget {
   const AddFamilyMember({super.key});
@@ -18,6 +20,23 @@ class AddFamilyMember extends StatefulWidget {
 }
 
 class _AddFamilyMemberState extends State<AddFamilyMember> {
+  final _formKey = GlobalKey<FormState>();
+
+  // final nameController = TextEditingController();
+  // final relationsController = TextEditingController();
+  // final emailController = TextEditingController();
+  // final phoneNumberController = TextEditingController();
+  //
+  bool showValidation = false;
+
+  TextEditingController nameController = TextEditingController();
+  // TextEditingController relationsController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phonenumberController = TextEditingController();
+  bool? _isValue = false;
+  final RxStatus status = RxStatus.loading();
+  // TextEditingController confirmController = TextEditingController();
+
 
   File? _image;
   final ImagePicker _picker = ImagePicker();
@@ -45,6 +64,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
       log('No image selected.');
     }
   }
+
 
 
   @override
@@ -75,192 +95,253 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // SizedBox(height: Get.height*0.01,),
+          child: Form(
+            key: _formKey,
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: CircleAvatar(
+                    maxRadius: 54,
+                    backgroundColor:const Color(0xff75D051) ,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: InkWell(
+                        onTap: (){
 
-              Center(
-                child: CircleAvatar(
-                  maxRadius: 54,
-                  backgroundColor:const Color(0xff75D051) ,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: InkWell(
-                      onTap: (){
-
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Dialog(
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal:26,vertical: 18),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Text("Choose Any One:",style: GoogleFonts.roboto(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color:Colors.black),),
-
-                                    SizedBox(height: Get.height*0.04,),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          InkWell(
-                                            onTap: (){
-                                              _pickImageFromCamera();
-                                              Get.back();
-                                            },
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                // Icon(Icons.camera_rear),
-                                                Image.asset("assets/icons/camera.png",height: 24,width: 24,),
-                                                Text("Camera",style: GoogleFonts.roboto(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.w400,
-                                                    color:Colors.black),),
-                                              ],
-                                            ),
-                                          ),
-                                          InkWell(
-                                            onTap: (){
-                                              _pickImageFromGallery();
-                                              Get.back();
-                                            },
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                // Icon(Icons.browse_gallery),gallery
-                                                Image.asset("assets/icons/gallery.png",height: 24,width: 24,),
-                                                Text("Gallery",style: GoogleFonts.roboto(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.w400,
-                                                    color:Colors.black),),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(height: Get.height*0.04,),
-                                  ],
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Dialog(
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
-                              ),
-                            );
-                          },
-                        );
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal:26,vertical: 18),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Text("Choose Any One:",style: GoogleFonts.roboto(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color:Colors.black),),
 
-                      },
-                      child:
-                      Container(
-                        height: 100,
-                        width: 100,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(50)
-                        ),
+                                      SizedBox(height: Get.height*0.04,),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            InkWell(
+                                              onTap: (){
+                                                _pickImageFromCamera();
+                                                Get.back();
+                                              },
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  // Icon(Icons.camera_rear),
+                                                  Image.asset("assets/icons/camera.png",height: 24,width: 24,),
+                                                  Text("Camera",style: GoogleFonts.roboto(
+                                                      fontSize: 15,
+                                                      fontWeight: FontWeight.w400,
+                                                      color:Colors.black),),
+                                                ],
+                                              ),
+                                            ),
+                                            InkWell(
+                                              onTap: (){
+                                                _pickImageFromGallery();
+                                                Get.back();
+                                              },
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  // Icon(Icons.browse_gallery),gallery
+                                                  Image.asset("assets/icons/gallery.png",height: 24,width: 24,),
+                                                  Text("Gallery",style: GoogleFonts.roboto(
+                                                      fontSize: 15,
+                                                      fontWeight: FontWeight.w400,
+                                                      color:Colors.black),),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: Get.height*0.04,),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+
+                        },
                         child:
-                        _image == null
-                            ? Image.asset("assets/icons/addimage.png",fit: BoxFit.cover,)
-                            : Image.file(_image!,fit: BoxFit.cover,),
+                        Container(
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(50)
+                          ),
+                          child:
+                          _image == null
+                              ? Image.asset("assets/icons/addimage.png",fit: BoxFit.cover,)
+                              : Image.file(_image!,fit: BoxFit.cover,),
 
 
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(vertical: 30),
-              //   child:
-              //   Center(
-              //     child: SvgPicture.asset("assets/images/Ellipse 1573.svg"),
-              //   ),
-              // ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14,vertical: 15),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Name",
-                      style: GoogleFonts.roboto(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15),
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    const EditProfileTextFieldWidget(
-                      hint: "Enter Your Name",
-                    ),
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    Text(
-                      "Email",
-                      style: GoogleFonts.roboto(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15),
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    const EditProfileTextFieldWidget(
-                      hint: "Enter Your Email",
-                    ),
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    Text(
-                      "Phone Number",
-                      style: GoogleFonts.roboto(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15),
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    const EditProfileTextFieldWidget(
-                      hint: "+91 : 9876543210",
-                    ),
-                    const SizedBox(
-                      height: 60,
-                    ),
-                    ElevatedButton(
-                        onPressed: () async {
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14,vertical: 15),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Name",
+                        style: GoogleFonts.roboto(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15),
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                       EditProfileTextFieldWidget(
+                         textInputAction: TextInputAction.next,
+                         keyboardType: TextInputType.name,
+                        hint: "Enter Your Name",
+                        controller: nameController,
+                         validator: (value) {
+                           if (value!.trim().isEmpty) {
+                             return 'Please Enter Name'.tr;
+                           } else if (value.length >= 30) {
+                             return 'Name cannot exceed 30 characters'.tr;
+                           }
+                           else if (RegExp(r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])').hasMatch(value)) {
+                             return 'Name is not accept in emoji'.tr;
+                           }
+                           return null;
+                         },
+
+                        // controller: nameController.,
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      Text(
+                        "Email",
+                        style: GoogleFonts.roboto(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15),
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                       EditProfileTextFieldWidget(
+                        hint: "Enter Your Email",
+                        controller:emailController,
+                         keyboardType: TextInputType.emailAddress,
+                         validator: (value) {
+                           if (value!.isEmpty) {
+                             return "Email is required";
+                           } else {
+                             return null;
+                           }
+                         },
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      Text(
+                        "Phone Number",
+                        style: GoogleFonts.roboto(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15),
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      EditProfileTextFieldWidget(
+                        textInputAction: TextInputAction.next,
+                        hint: 'Enter Your Phone Number',
+                        keyboardType: TextInputType.number,
+                        controller: phonenumberController,
+                        validator: (value) {
+                          if (value!.isEmpty
+                          // || RegExp(r'^(?:\+?88|0088)?01[13-9]\d{8}$').hasMatch(value)
+                          ) {
+                            return "Phone number is required";
+                          } else if  (value.length > 10) {
+                            return 'number cannot exceed 10 characters'.tr;
+                          }
+                          return null;
                         },
-                        style: ElevatedButton.styleFrom(
-                          minimumSize:
-                          Size(AddSize.screenWidth, AddSize.size60),
-                          backgroundColor: const Color(0xffFBB742),
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                        ),
-                        child: Text("Save".toUpperCase(),
-                            style: GoogleFonts.roboto(
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white,
-                                letterSpacing: .5,
-                                fontSize: 20))),
+                      ),
+                      const SizedBox(
+                        height: 60,
+                      ),
+                      ElevatedButton(
+                          onPressed: () async {
+                           if (_formKey.currentState!.validate()) {
+                             addFamilyMemberRepo(
+                                  name: nameController.text,
+                                  email: emailController.text,
+                                 phonenumber:phonenumberController.text,
+                                  images:_image ?? "" ,
+                                  context: context
 
-                  ],
+
+
+                              ).then((value) {
+                                if (value.success == true) {
+
+                                  print("data${value.message}");
+                                  showToast(value.message);
+                                  Get.back();
+                                  //Get.toNamed(SignupOtp.route, arguments: emailController.text);
+                                  print("emailController${emailController.text}");
+
+                                  //  Get.toNamed(LoginScreen.route);
+                                }
+                                else {
+                                  print("data>>>>>>>");
+                                  //Get.toNamed(SignupOtp.route, arguments: emailController.text);
+                                  showToast(value.message);
+                                }
+                              });
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            minimumSize:
+                            Size(AddSize.screenWidth, AddSize.size60),
+                            backgroundColor: const Color(0xffFBB742),
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
+                          child: Text("Save".toUpperCase(),
+                              style: GoogleFonts.roboto(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                  letterSpacing: .5,
+                                  fontSize: 20))),
+
+                    ],
+                  ),
                 ),
-              ),
 
 
 
-            ],
+              ],
+            ),
           ),
         ),
       ),

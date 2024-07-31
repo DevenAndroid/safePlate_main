@@ -14,6 +14,7 @@ class ChangePassword extends StatefulWidget {
 
   static var route = "/changePasswordScreen";
 
+
   @override
   State<ChangePassword> createState() => _ChangePasswordState();
 }
@@ -22,16 +23,17 @@ class _ChangePasswordState extends State<ChangePassword> {
   TextEditingController newPassword = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
+  bool apiLoading = false;
+  String text = '';
   var obscureText1 = true;
   var obscureText2 = true;
   void initState() {
     // TODO: implement initState
     super.initState();
-    text = Get.arguments[0];
-
+    text = Get.arguments;
+    print('fcyeuftc7ert7${text}');
   }
-  String text = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,7 +95,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                         topLeft: Radius.circular(30),
                         topRight: Radius.circular(30))),
                 child: Form(
-                   key: _formKey,
+                  key: _formKey,
                   child: SingleChildScrollView(
                     child: Padding(
                       padding:
@@ -159,17 +161,17 @@ class _ChangePasswordState extends State<ChangePassword> {
                                         color: Color(0xFF53B176),
                                       )),
                             // controller: emailController,
-                            validator:MultiValidator([
+                            validator: MultiValidator([
                               RequiredValidator(
-                                  errorText: 'Password must be minimum 8 characters, with \n1 Capital letter & 1 numerical.'),
+                                  errorText:
+                                      'Password must be minimum 8 characters, with \n1 Capital letter & 1 numerical.'),
                               MinLengthValidator(8,
                                   errorText:
-                                  'Password must be minimum 8 characters, with \n1 Capital letter & 1 numerical.'),
-                              PatternValidator(
-                                  r'^(?=.*[A-Z])(?=.*\d).{8,}$',
+                                      'Password must be minimum 8 characters, with \n1 Capital letter & 1 numerical.'),
+                              PatternValidator(r'^(?=.*[A-Z])(?=.*\d).{8,}$',
                                   // r"^[a-zA-Z]{8,10}$",
                                   errorText:
-                                  'Password must be minimum 8 characters, with \n1 Capital letter & 1 numerical.')
+                                      'Password must be minimum 8 characters, with \n1 Capital letter & 1 numerical.')
                             ]),
                           ),
                           SizedBox(
@@ -188,7 +190,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                             height: Get.height * 0.012,
                             // height: AddSize.size5,
                           ),
-                          CommonTextFieldWidget(controller: confirmPassword,
+                          CommonTextFieldWidget(
+                            controller: confirmPassword,
                             textInputAction: TextInputAction.next,
                             hint: 'Enter Confirm New Password',
                             obscureText: obscureText2,
@@ -224,14 +227,38 @@ class _ChangePasswordState extends State<ChangePassword> {
 
                           ElevatedButton(
                               onPressed: () async {
-                                if(_formKey.currentState!.validate()){
-                                  resetPasswordRepo(email: text,password: confirmPassword.text, context: context,).then((value) {
-                                    if(value.success == true){
-                                      showToast(value.message);
-                                      Get.offAllNamed(LoginScreen.route);
-                                    }
-                                  });
+                                if (_formKey.currentState!.validate()) {
+                                  try {
+                                    resetPasswordRepo(
+                                      email: text,
+                                      password: confirmPassword.text,
+                                      context: context,
+                                    ).then((value1) async {
+                                      if (value1.sucess == true) {
+                                        showToast(value1.message.toString());
+                                        Get.offAllNamed(LoginScreen.route);
+                                      } else {
+                                        showToast(value1.message.toString());
+
+                                      }
+                                      apiLoading = false;
+                                    });
+                                  } catch (e) {
+                                    apiLoading = false;
+                                  }
                                 }
+                                // if(_formKey.currentState!.validate()){
+                                //
+                                //   resetPasswordRepo(email: text,password: confirmPassword.text, context: context,).then((value) {
+                                //     if(value.success == true){
+                                //       showToast(value.message);
+                                //       Get.offAllNamed(LoginScreen.route);
+                                //     }
+                                //     else {
+                                //       showToast(value.message.toString());
+                                //     }
+                                //   });
+                                // }
                               },
                               style: ElevatedButton.styleFrom(
                                 minimumSize:

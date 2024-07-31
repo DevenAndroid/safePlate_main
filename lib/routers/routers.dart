@@ -1,5 +1,7 @@
 // import 'package:get/get_navigation/src/routes/get_route.dart';
 
+import 'package:Safeplate/google_ml_kit.dart';
+import 'package:Safeplate/image_gemini.dart';
 import 'package:Safeplate/screen/BottomNavBar/bottomnavbar.dart';
 import 'package:Safeplate/screen/BottomNavBar/home.dart';
 import 'package:Safeplate/screen/BottomNavBar/profile_screen.dart';
@@ -23,7 +25,7 @@ import 'package:get/get.dart';
 class MyRouter {
   static var splashScreen = "/splashScreen";
   static var route = [
-  GetPage(name: '/', page: () =>  const SplashScreen()),
+  GetPage(name: '/', page: () =>   MyHomePage()),
     GetPage(name: OnBoardingScreen.route, page: () => const OnBoardingScreen()),
     GetPage(name: ForgotScreen.route, page: () => const ForgotScreen()),
     GetPage(name: LoginScreen.route, page: () => const LoginScreen()),

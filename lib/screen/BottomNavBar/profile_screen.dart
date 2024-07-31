@@ -7,9 +7,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:Safeplate/widget/custom_textfield.dart';
-
+import '../../controller/profile_controller.dart';
 import '../../model/profie_model.dart';
-import '../../profile_controller.dart';
+// import '../../profile_controller.dart';
+// import 'BottomNavBar/profile_controller.dart';
 import '../../widget/helper.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -62,7 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body:   Obx((){
         return
-          profileController.statusOfProfile.value.isSuccess?
+          profileController.statusOfProfile.value.isEmpty?
 
           Padding(
           padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 20),
@@ -120,7 +121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       width: 30,
                     ),
                     Text(
-                      profileController.nameController.value.text.toString(),
+                      profileController.nameController.text.toString(),
                       style: GoogleFonts.roboto(
                           fontSize: 20, fontWeight: FontWeight.w600),
                     )
@@ -170,7 +171,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(
                   height: 12,
                 ),
-                EditProfileTextFieldWidget(
+                 EditProfileTextFieldWidget(
                   hint: "+91 : 9876543210",
                   controller: profileController.phoneNumberController,
                 ),
@@ -188,7 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(
                   height: 12,
                 ),
-                EditProfileTextFieldWidget(
+             EditProfileTextFieldWidget(
 
                   maxLines: 5,
                   hint:
@@ -212,7 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           const SizedBox(
                             height: 12,
                           ),
-                          TextFormField(
+                         TextFormField(
                             controller: profileController.weightController,
                             decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffAFAFAF)),
@@ -224,7 +225,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               hintText: '10 Ft',
                             ),
                             keyboardType: TextInputType.number,
-                          ),
+                          )
+
                         ],
                       ),
                     ),
@@ -287,7 +289,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           const SizedBox(
                             height: 12,
                           ),
-                          TextFormField(
+                        TextFormField(
                             controller: profileController.fitController,
                             decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffAFAFAF)),
@@ -299,7 +301,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               hintText: '10 Ft',
                             ),
                             keyboardType: TextInputType.number,
-                          ),
+                          )
+
                         ],
                       ),
                     ),
@@ -314,7 +317,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           const SizedBox(
                             height: 12,
                           ),
-                          TextFormField(
+                         TextFormField(
                             controller: profileController.inchController,
                             decoration: InputDecoration(
                               hintText: '10 In',
@@ -326,7 +329,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   borderRadius: BorderRadius.circular(10)),
                             ),
                             keyboardType: TextInputType.number,
-                          ),
+                          )
+
                         ],
                       ),
                     ),
@@ -394,11 +398,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 12,
                 ),
                 EditProfileTextFieldWidget(
-                  hint:
-                  "22 year",
-                ),
-                const SizedBox(
-                  height: 25,
+                  hint: "22 year",
+                  controller:profileController.ageController ,
                 ),
                 Text(
                   "Gender",

@@ -57,7 +57,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
     // Implement your OTP resend logic here
     print('OTP resent');
   }
-
+  String text = '';
   @override
   void dispose() {
     _timer?.cancel();
@@ -66,10 +66,10 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    text = Get.arguments[0];
+    text = Get.arguments;
 
   }
-  String text = '';
+
 
   @override
   Widget build(BuildContext context) {
@@ -274,7 +274,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                                         .then((value1) async {
                                       if (value1.success == true) {
                                         showToast(value1.message.toString());
-                                        Get.offAllNamed(ChangePassword.route);
+                                        Get.offAllNamed(ChangePassword.route,arguments:text );
                                       } else {
                                         showToast(value1.message.toString());
                                       }

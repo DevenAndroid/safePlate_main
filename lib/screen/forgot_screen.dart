@@ -72,7 +72,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
               // top: Get.height*0.50,
 
               child: Container(
-                  // height: AddSize.size30 * 12,
+                // height: AddSize.size30 * 12,
                 // height: AddSize.screenHeight,
                 padding: EdgeInsets.symmetric(horizontal: AddSize.padding20),
                 margin: EdgeInsets.only(top: AddSize.size30),
@@ -147,7 +147,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
                             onPressed: () {
                               if (_formKey1.currentState!.validate()) {
                                 forgotRepo( context: context,
-                                    email: emailController.text.toString(),
+                                  email: emailController.text.toString(),
                                 ).then((value) {
                                   if (value.success == true) {
                                     showToast(value.message);
