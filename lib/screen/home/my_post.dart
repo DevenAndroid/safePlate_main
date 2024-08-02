@@ -5,7 +5,9 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../repo/create_community_repo.dart';
 import '../../widget/custom_textfield.dart';
+import '../../widget/helper.dart';
 
 class MyPostScreen extends StatefulWidget {
   const MyPostScreen({super.key});
@@ -15,19 +17,23 @@ class MyPostScreen extends StatefulWidget {
 }
 
 class _MyPostScreenState extends State<MyPostScreen> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController captionController = TextEditingController();
+  TextEditingController messageController = TextEditingController();
+  final _formkey = GlobalKey<FormState>();
 
   void _showBottomSheet() {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (context) {
         return Container(
           height: MediaQuery.of(context).size.height * 0.86,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(30),
               topLeft: Radius.circular(30),
@@ -37,143 +43,173 @@ class _MyPostScreenState extends State<MyPostScreen> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18.0,vertical: 16),
             child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                 mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(height: Get.height*0.02,),
-                  Text(
-                    'Submit a piece',
-                    style: GoogleFonts.roboto(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: Get.height * 0.03),
-                  Text(
-                    "Name",
-                    style: GoogleFonts.roboto(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: Get.height * 0.006),
-                  CommonTextFieldWidget(
-                    textInputAction: TextInputAction.next,
-                    hint: 'Enter Your Name',
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Email or Phone is required";
-                      } else {
-                        return null;
-                      }
-                    },
-                  ),
-                  SizedBox(height: Get.height * 0.02),
-                  Text(
-                    "Caption",
-                    style: GoogleFonts.roboto(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: Get.height * 0.006),
-                  CommonTextFieldWidget(
-                    textInputAction: TextInputAction.next,
-                    hint: 'Caption',
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Caption is required";
-                      } else {
-                        return null;
-                      }
-                    },
-                  ),
-                  SizedBox(height: Get.height * 0.02),
-                  Text(
-                    "Message",
-                    style: GoogleFonts.roboto(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: Get.height * 0.006),
-                  CommonTextFieldWidget(
-                    maxLines: 8,
-                    minLines: 4,
-                    textInputAction: TextInputAction.next,
-                    hint: 'Submit Your Photo or Text',
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Submit Your Photo or Text is required";
-                      } else {
-                        return null;
-                      }
-                    },
-                  ),
-                  SizedBox(height: Get.height * 0.02),
-                  Text(
-                    "Upload Photo",
-                    style: GoogleFonts.roboto(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: Get.height * 0.006),
-                  Container(
-                    width: Get.width,
-                    height: Get.height*0.14,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "assets/icons/upload.png",
-                          height: 36,
-                          width: 36,
-                        ),
-                        Text(
-                          "Upload Image",
-                          style: GoogleFonts.roboto(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: Get.height*0.04,),
-                  ElevatedButton(
-                      onPressed: () async {
-                    Get.back();
-                      },
-                      style: ElevatedButton.styleFrom(
-
-                        minimumSize: Size(Get.width,50),
-                        backgroundColor: Color(0xffFBB742),
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
+              child: Form(
+                key: _formkey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: Get.height * 0.02,),
+                    Text(
+                      'Submit a piece',
+                      style: GoogleFonts.roboto(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
                       ),
-                      child: Text("Submit".toUpperCase(),
-                          style: GoogleFonts.roboto(
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                              letterSpacing: .5,
-                              fontSize: 20))),
+                    ),
+                    SizedBox(height: Get.height * 0.03),
+                    Text(
+                      "Name",
+                      style: GoogleFonts.roboto(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: Get.height * 0.006),
+                    CommonTextFieldWidget(
+                      controller: nameController,
+                      textInputAction: TextInputAction.next,
+                      hint: 'Enter Your Name',
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Email or Phone is required";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    SizedBox(height: Get.height * 0.02),
+                    Text(
+                      "Caption",
+                      style: GoogleFonts.roboto(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: Get.height * 0.006),
+                    CommonTextFieldWidget(
+                      controller: captionController,
+                      textInputAction: TextInputAction.next,
+                      hint: 'Caption',
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Caption is required";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    SizedBox(height: Get.height * 0.02),
+                    Text(
+                      "Message",
+                      style: GoogleFonts.roboto(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: Get.height * 0.006),
+                    CommonTextFieldWidget(
+                      controller: messageController,
+                      maxLines: 8,
+                      minLines: 4,
+                      textInputAction: TextInputAction.next,
+                      hint: 'Submit Your Photo or Text',
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Submit Your Photo or Text is required";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    SizedBox(height: Get.height * 0.02),
+                    Text(
+                      "Upload Photo",
+                      style: GoogleFonts.roboto(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: Get.height * 0.006),
+                    Container(
+                      width: Get.width,
+                      height: Get.height * 0.14,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/icons/upload.png",
+                            height: 36,
+                            width: 36,
+                          ),
+                          Text(
+                            "Upload Image",
+                            style: GoogleFonts.roboto(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: Get.height * 0.04,),
+                    ElevatedButton(
+                        onPressed: () async {
+                          if (_formkey.currentState!.validate()) {
+                            createCommunityRepo(
+                                name: nameController.text,
+                                context: context,
+                                message: messageController.text,
+                                caption: captionController.text
 
-                  SizedBox(height: Get.height*0.02),
-                ],
+                            ).then((value) {
+                              if(value.success == true){
+                                print("data${value.message}");
+                                showToast(value.message);
+                                Get.back();
+                              }
+                              else {
+                                print("data>>>>>>>");
+                                showToast(value.message);
+                              }
+                            }
+
+
+                            );
+                          }
+
+
+                          // Get.back();
+                        },
+                        style: ElevatedButton.styleFrom(
+
+                          minimumSize: Size(Get.width, 50),
+                          backgroundColor: Color(0xffFBB742),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                        ),
+                        child: Text("Submit".toUpperCase(),
+                            style: GoogleFonts.roboto(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                                letterSpacing: .5,
+                                fontSize: 20))),
+
+                    SizedBox(height: Get.height * 0.02),
+                  ],
+                ),
               ),
             ),
           ),
@@ -183,10 +219,8 @@ class _MyPostScreenState extends State<MyPostScreen> {
   }
 
 
-
   @override
   Widget build(BuildContext context) {
-
     var height= MediaQuery.sizeOf(context).height ;
     var width= MediaQuery.sizeOf(context).width ;
     return Scaffold(
@@ -213,7 +247,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
             child: InkWell(
               onTap: (){
                 _showBottomSheet();
-               // Get.to(());
+                // Get.to(());
               },
               child: Container(
                 decoration: BoxDecoration(
