@@ -100,7 +100,7 @@ class _SettingScreenState extends State<SettingScreen> {
              GestureDetector(
                behavior: HitTestBehavior.translucent,
                onTap: () {
-                 Get.to(const CommunityAndMyPosts());
+                 Get.to(const AllFamilyMember());
                },
                child: moreData(
                   SvgPicture.asset("assets/setting/family_icon 1.svg"),

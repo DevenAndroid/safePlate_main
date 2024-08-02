@@ -6,16 +6,12 @@ import 'package:Safeplate/screen/forgot_screen.dart';
 import 'package:Safeplate/screen/signup_screen.dart';
 import 'package:Safeplate/widget/custom_textfield.dart';
 import 'package:Safeplate/widget/helper.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'BottomNavBar/home.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
