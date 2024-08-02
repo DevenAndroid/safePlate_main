@@ -14,6 +14,9 @@ class ApiUrl{
   static const profile = "${baseUrl}profile";
   static const updateProfile = "${baseUrl}updateprofile";
   static const addFamilyMember = "${baseUrl}addmember";
+  static const createCommunity = "${baseUrl}addpost";
+  static const getMyPost = "${baseUrl}posts";
+  static const getAllPost = "${baseUrl}allposts";
 
 }
 Future getAuthHeader() async {
