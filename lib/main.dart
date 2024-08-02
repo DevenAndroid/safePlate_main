@@ -1,4 +1,5 @@
 import 'package:Safeplate/routers/routers.dart';
+import 'package:Safeplate/screen/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
         ),
         themeMode: ThemeMode.light,
         debugShowCheckedModeBanner: false,
-        initialRoute: "/",
+        // initialRoute: "/",
+        initialRoute:  OnBoardingScreen.route,
         getPages:MyRouter.route,
       ),
     );

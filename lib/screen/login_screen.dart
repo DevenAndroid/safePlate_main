@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       key: _formKey1,
                       child: Padding(
                         padding:
-                            EdgeInsets.symmetric(horizontal: AddSize.padding18),
+                        EdgeInsets.symmetric(horizontal: AddSize.padding18),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -168,13 +168,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                   },
                                   child: obscureText1
                                       ? const Icon(
-                                          Icons.visibility_off,
-                                          color: Colors.grey,
-                                        )
+                                    Icons.visibility_off,
+                                    color: Colors.grey,
+                                  )
                                       : const Icon(
-                                          Icons.visibility,
-                                          color: Color(0xFF53B176),
-                                        )),
+                                    Icons.visibility,
+                                    color: Color(0xFF53B176),
+                                  )),
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return "Password is required";
@@ -208,11 +208,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             ElevatedButton(
                                 onPressed: () {
-    // if (_formKey1.currentState!.validate()) {
-    //   login();
-    // }else{
-    //   showToast("something is went wrong");
-    // }
+                                  // if (_formKey1.currentState!.validate()) {
+                                  //   login();
+                                  // }else{
+                                  //   showToast("something is went wrong");
+                                  // }
 
                                   if (_formKey1.currentState!.validate()) {
                                     loginRepo(
@@ -223,20 +223,25 @@ class _LoginScreenState extends State<LoginScreen> {
                                     )
                                         .then(
                                             (value) async {
-                                      if (value.success == true) {
-                                        final prefs = await SharedPreferences.getInstance();
-                                        await prefs.setString('token', value.accessToken.toString());
-                                        showToast(value.message);
-                                        Get.toNamed(BottomNavbar.route,);
-                                      } else {
-                                        showToast(value.message);
-                                      }
-                                    });
+                                          if (value.success == true) {
+                                            SharedPreferences pref = await SharedPreferences.getInstance();
+                                            pref.setString("cookie", jsonEncode(value.accessToken));
+                                            // pref.setString("user_info", jsonEncode(value.accessToken));
+                                            // prefs.setString('token', value.accessToken.toString());
+                                            // final prefs = await SharedPreferences.getInstance();
+                                            // await prefs.setString('token', value.accessToken.toString());
+                                            showToast(value.message);
+                                            print("tojkenmy =>${value.accessToken.toString()}");
+                                            Get.toNamed(BottomNavbar.route,);
+                                          } else {
+                                            showToast(value.message);
+                                          }
+                                        });
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   minimumSize:
-                                      Size(AddSize.screenWidth, AddSize.size50),
+                                  Size(AddSize.screenWidth, AddSize.size50),
                                   backgroundColor: Color(0xffFBB742),
                                   elevation: 0,
                                   shape: RoundedRectangleBorder(
@@ -322,27 +327,27 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 Platform.isIOS
                                     ? GestureDetector(
-                                        onTap: () {
-                                          // loginWithApple();
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: AddSize.size40,
-                                              vertical: AddSize.padding10),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                          child: Center(
-                                            child: Image(
-                                                height: AddSize.size20,
-                                                width: AddSize.size30,
-                                                image: const AssetImage(
-                                                    "   assets/icons/apple.png")),
-                                          ),
-                                        ),
-                                      )
+                                  onTap: () {
+                                    // loginWithApple();
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: AddSize.size40,
+                                        vertical: AddSize.padding10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                      BorderRadius.circular(12),
+                                    ),
+                                    child: Center(
+                                      child: Image(
+                                          height: AddSize.size20,
+                                          width: AddSize.size30,
+                                          image: const AssetImage(
+                                              "   assets/icons/apple.png")),
+                                    ),
+                                  ),
+                                )
                                     : const SizedBox()
                               ],
                             ),
@@ -394,9 +399,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              // SizedBox(
-              //   height: AddSize.size20,
-              // ),
+
             ],
           ),
         ],
@@ -404,38 +407,38 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void login() async {
-    final url = Uri.parse('https://safegate.virtualdemo.tech/api/v1/login');
-    final headers = {
-      'Content-Type': 'application/json',
-      // 'Cookie': 'connect.sid=s%3Ak6nhc_76OKSswNfV8zhdyQ5qjlhRk308.uIkd%2FeX97K2NoPPe%2Bhi1PiM7uKpDLqtljdyIKteCrgY'
-    };
-    final body = jsonEncode(
-        {'email': emailController.text, 'password': passwordController.text});
-
-    final response = await http.post(url, headers: headers, body: body);
-
-    try {
-      if (response.statusCode == 200) {
-        print('Login successful');
-        Get.toNamed(
-          BottomNavbar.route,
-        );
-        final data =jsonDecode(response.body);
-        showToast(data['message']);
-      } else {
-        final data =jsonDecode(response.body);
-        final saveData = data;
-        SharedPreferences pref = await SharedPreferences.getInstance();
-        pref= data['message'];
-        showToast(data['message']);
-        print('Login failed${pref.toString()}');
-        print('Status code: ${response.statusCode}');
-        print('Response body: ${response.body}');
-      }
-    } catch (e) {
-
-      showToast('error');
-    }
-  }
+// void login() async {
+//   final url = Uri.parse('https://safegate.virtualdemo.tech/api/v1/login');
+//   final headers = {
+//     'Content-Type': 'application/json',
+//     // 'Cookie': 'connect.sid=s%3Ak6nhc_76OKSswNfV8zhdyQ5qjlhRk308.uIkd%2FeX97K2NoPPe%2Bhi1PiM7uKpDLqtljdyIKteCrgY'
+//   };
+//   final body = jsonEncode(
+//       {'email': emailController.text, 'password': passwordController.text});
+//
+//   final response = await http.post(url, headers: headers, body: body);
+//
+//   try {
+//     if (response.statusCode == 200) {
+//       print('Login successful');
+//       Get.toNamed(
+//         BottomNavbar.route,
+//       );
+//       final data =jsonDecode(response.body);
+//       showToast(data['message']);
+//     } else {
+//       final data =jsonDecode(response.body);
+//       final saveData = data;
+//       SharedPreferences pref = await SharedPreferences.getInstance();
+//       pref= data['message'];
+//       showToast(data['message']);
+//       print('Login failed${pref.toString()}');
+//       print('Status code: ${response.statusCode}');
+//       print('Response body: ${response.body}');
+//     }
+//   } catch (e) {
+//
+//     showToast('error');
+//   }
+// }
 }
