@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiUrl{
-  static const baseUrl = "https://safegate.virtualdemo.tech/api/v1/";
+  static const baseUrl = "https://safegate.webdemozone.com/api/v1/";
   static const loginApi = "${baseUrl}login";
   static const signApi = "${baseUrl}register";
   static const forgotMailApi = "${baseUrl}forgotPassword";

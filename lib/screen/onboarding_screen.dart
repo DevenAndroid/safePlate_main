@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pushy_flutter/pushy_flutter.dart';
 import 'login_screen.dart';
 import 'onboard_data.dart';
 
@@ -17,12 +18,32 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   late PageController _pageController;
   final RxInt _pageIndex = 0.obs;
 
+///                     Token /////////////////////////////////////////////////////////////////////
+  String _deviceToken = 'Loading...';
+  Future<void> initPlatformState() async {
+    Pushy.listen();
+    // Pushy.setAppId('YOUR_APP_ID');
+    Pushy.setAppId('com.safeplate.safeplate');
 
+    try {
+      String deviceToken = await Pushy.register();
+      print('Device token: $deviceToken');
+      setState(() {
+        _deviceToken = deviceToken;
+      });
+    } catch (error) {
+      print('Error: ${error.toString()}');
+      setState(() {
+        _deviceToken = 'Registration failed';
+      });
+    }
+  }
 
-
+  ///                     Token /////////////////////////////////////////////////////////////////////
   @override
   void initState() {
     super.initState();
+    initPlatformState();
     _pageController = PageController(initialPage: 0);
 
   }
