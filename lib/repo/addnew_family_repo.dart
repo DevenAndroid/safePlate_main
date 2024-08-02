@@ -21,22 +21,17 @@ Future<AddNewFamilyMemberModel> addFamilyMemberRepo(
   map['name'] = name;
   map['email'] = email;
   map['phonenumber'] = phonenumber;
-  http.MultipartFile.fromPath('file', images!.path ?? "");
+ // http.MultipartFile.fromPath('file', images!.path ?? "");
   // map['file'] = http.MultipartFile.fromPath(images);
   // request.files.add(await http.MultipartFile.fromPath('file', _image!.path));
 
 
   log("ADD Family Data map$map");
   try {
-    final headers = {
-      HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.acceptHeader: 'application/json',
-      'Cookie':'connect.sid=s%3Ak6nhc_76OKSswNfV8zhdyQ5qjlhRk308.uIkd%2FeX97K2NoPPe%2Bhi1PiM7uKpDLqtljdyIKteCrgY'
 
-    };
 
     http.Response response = await http.post(Uri.parse(ApiUrl.addFamilyMember),
-        body: jsonEncode(map), headers: headers);
+        body: jsonEncode(map),  headers: await getAuthHeader());
     log(response.statusCode.toString());
     log(response.body.toString());
     if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 400) {
