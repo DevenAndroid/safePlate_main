@@ -25,7 +25,7 @@ import 'package:get/get.dart';
 class MyRouter {
   static var splashScreen = "/splashScreen";
   static var route = [
-  GetPage(name: '/', page: () =>   MyHomePage()),
+  GetPage(name: '/', page: () =>   SplashScreen()),
     GetPage(name: OnBoardingScreen.route, page: () => const OnBoardingScreen()),
     GetPage(name: ForgotScreen.route, page: () => const ForgotScreen()),
     GetPage(name: LoginScreen.route, page: () => const LoginScreen()),

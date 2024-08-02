@@ -326,44 +326,45 @@ class _CaptureImageScreenState extends State<CaptureImageScreen> {
     //   await _sendImageToGeminiApi(capturedImageBase64!);
     // }
   }
-  // final model = GenerativeModel(
-  //     model: 'gemini-1.5-flash',
-  //     apiKey: 'AIzaSyCN8dhcaho97nuCPLH8jpSwHnw_B2CpqqA',
-  //     generationConfig: GenerationConfig(maxOutputTokens: 100));
-  // Future<void> _sendImageToGeminiApi(String base64Image) async {
-  //   final apiKey = Platform.environment['AIzaSyCiDGfFN-tCfYrF52weQZ0Lbv8_UcmNbA4'];
-  //   if (apiKey == null) {
-  //     print('No \$API_KEY environment variable');
-  //     // exit(1);
-  //   }
-  //   final model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: apiKey!);
-  //   final chat = model.startChat(history: [
-  //     Content.text('Hello, I have 2 dogs in my house.'),
-  //     Content.model([TextPart('Great to meet you. What would you like to know?')])
-  //   ]);
-  //   var content = Content.text('How many paws are in my house?');
-  //   var response = await chat.sendMessage(content);
-  //   print(response.text);
-  //   // final url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyCuDv9bqBVT8vOhYBwSyTJVr9uveby9xRs';
-  //   // final headers = {
-  //   //   'Content-Type': 'application/json',
-  //   // };
-  //   // final body = jsonEncode({'image': base64Image});
-  //   //
-  //   // final response = await http.post(
-  //   //   Uri.parse(url),
-  //   //   headers: headers,
-  //   //   body: body,
-  //   // );
-  //   //
-  //   // if (response.statusCode == 200) {
-  //   //   // Handle successful response
-  //   //   print('Image uploaded successfully: ${response.body}');
-  //   // } else {
-  //   //   // Handle error response
-  //   //   print('Failed to upload image: ${response.statusCode}');
-  //   // }
-  // }
+  final model = GenerativeModel(
+      model: 'gemini-1.5-flash',
+      apiKey: 'AIzaSyCN8dhcaho97nuCPLH8jpSwHnw_B2CpqqA',
+      generationConfig: GenerationConfig(maxOutputTokens: 100));
+
+  Future<void> _sendImageToGeminiApi(String base64Image) async {
+    final apiKey = Platform.environment['AIzaSyCiDGfFN-tCfYrF52weQZ0Lbv8_UcmNbA4'];
+    if (apiKey == null) {
+      print('No \$API_KEY environment variable');
+      // exit(1);
+    }
+    final model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: apiKey!);
+    final chat = model.startChat(history: [
+      Content.text('Hello, I have 2 dogs in my house.'),
+      Content.model([TextPart('Great to meet you. What would you like to know?')])
+    ]);
+    var content = Content.text('How many paws are in my house?');
+    var response = await chat.sendMessage(content);
+    print(response.text);
+    // final url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyCuDv9bqBVT8vOhYBwSyTJVr9uveby9xRs';
+    // final headers = {
+    //   'Content-Type': 'application/json',
+    // };
+    // final body = jsonEncode({'image': base64Image});
+    //
+    // final response = await http.post(
+    //   Uri.parse(url),
+    //   headers: headers,
+    //   body: body,
+    // );
+    //
+    // if (response.statusCode == 200) {
+    //   // Handle successful response
+    //   print('Image uploaded successfully: ${response.body}');
+    // } else {
+    //   // Handle error response
+    //   print('Failed to upload image: ${response.statusCode}');
+    // }
+  }
 
   @override
   Widget build(BuildContext context) {

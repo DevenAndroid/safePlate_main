@@ -360,8 +360,10 @@
 // }
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -458,10 +460,61 @@ class _MyHomePageState extends State<MyHomePage> {
       final bytes = await pickedFile.readAsBytes();
       setState(() {
         capturedImage = File(pickedFile.path);
-        capturedImageBase64 = base64Encode(bytes);
+     //   capturedImageBase64 = base64Encode(bytes);
+
+      });
+      await _sendImageToGeminiApi(capturedImage!);
+      setState(() {
+
       });
     }
   }
+
+  final model = GenerativeModel(
+      model: 'gemini-1.5-flash',
+      apiKey: 'AIzaSyCN8dhcaho97nuCPLH8jpSwHnw_B2CpqqA',
+      generationConfig: GenerationConfig(maxOutputTokens: 100));
+
+  Future<void> _sendImageToGeminiApi(File ff) async {
+    final model = GenerativeModel(
+      model: 'gemini-1.5-flash',
+      apiKey: "AIzaSyCiDGfFN-tCfYrF52weQZ0Lbv8_UcmNbA4",
+    );
+
+    final Uint8List images = await ff.readAsBytes();
+    final String base64Image = base64Encode(images);
+    final prompt = TextPart("Search this image");
+    final imagePart = TextPart(base64Image);
+
+    final response = await model.generateContent([
+      Content.multi([prompt, imagePart]),
+    ]);
+
+    print("REpondr>${response.text}");
+  }
+
+
+
+    // final url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyCuDv9bqBVT8vOhYBwSyTJVr9uveby9xRs';
+    // final headers = {
+    //   'Content-Type': 'application/json',
+    // };
+    // final body = jsonEncode({'image': base64Image});
+    //
+    // final response = await http.post(
+    //   Uri.parse(url),
+    //   headers: headers,
+    //   body: body,
+    // );
+    //
+    // if (response.statusCode == 200) {
+    //   // Handle successful response
+    //   print('Image uploaded successfully: ${response.body}');
+    // } else {
+    //   // Handle error response
+    //   print('Failed to upload image: ${response.statusCode}');
+    // }
+ // }
 
   @override
   Widget build(BuildContext context) {

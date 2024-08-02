@@ -28,8 +28,7 @@ class MyApp extends StatelessWidget {
         ),
         themeMode: ThemeMode.light,
         debugShowCheckedModeBanner: false,
-        // initialRoute: "/",
-        initialRoute:  OnBoardingScreen.route,
+         initialRoute: "/",
         getPages:MyRouter.route,
       ),
     );
