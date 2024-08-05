@@ -14,6 +14,7 @@ class ApiUrl{
   static const profile = "${baseUrl}profile";
   static const updateProfile = "${baseUrl}updateprofile";
   static const addFamilyMember = "${baseUrl}addmember";
+  static const likePost = "${baseUrl}likepost/";
 
   static const getFamilyMember = "${baseUrl}members";
 

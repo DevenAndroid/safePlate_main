@@ -1,12 +1,20 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:Safeplate/screen/home/my_favourite_post.dart';
 import 'package:Safeplate/screen/home/singlepost.dart';
+import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
+import '../../model/all_post_community_model.dart';
+import '../../model/like_post_model.dart';
 import '../../model/mypostcommunity_model.dart';
+import '../../repo/all_post_community_repo.dart';
+import '../../repo/like_repo.dart';
 import '../../repo/my_post_community_repo.dart';
+import '../../widget/helper.dart';
 import 'my_post.dart';
 
 class CommunityScreen extends StatefulWidget {
@@ -18,9 +26,9 @@ class CommunityScreen extends StatefulWidget {
 
 class _CommunityScreenState extends State<CommunityScreen> {
   Rx<RxStatus> statusOfpost = RxStatus.empty().obs;
-  Rx<MyPostCommunity> model = MyPostCommunity().obs;
-  void getData() {
-    myPostRepo().then((value) {
+  Rx<ModelAllCommunity> model = ModelAllCommunity().obs;
+  void getData1() {
+    allPostRepo().then((value) {
       model.value = value;
       if (value.success == true) {
         statusOfpost.value = RxStatus.success();
@@ -35,14 +43,26 @@ class _CommunityScreenState extends State<CommunityScreen> {
     });
   }
 
+  RxInt refreshInt = 0.obs;
+
+  Rx<RxStatus> statusOfmylike = RxStatus.empty().obs;
+  Rx<LikePostModel> Likemodel = LikePostModel().obs;
+
   @override
   void initState() {
     super.initState();
-    getData();
+    getData1();
+  }
+  void shareProduct(String name, String description, String url) {
+    final String text = 'Check out this product: $name\n\n$description\n\n$url';
+    Share.share(text);
   }
 
   @override
   Widget build(BuildContext context) {
+    final String productName = 'Awesome Product';
+    final String productDescription = 'This product is really awesome.';
+    final String productUrl = 'https://example.com/product';
     var height = MediaQuery.sizeOf(context).height;
     var width = MediaQuery.sizeOf(context).width;
     return Scaffold(
@@ -99,6 +119,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child:
            Obx((){
+             if (refreshInt.value > 0) {}
              return  statusOfpost.value.isSuccess
                  ? Column(
                children: [
@@ -181,6 +202,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
                    shrinkWrap: true,
                    itemCount: model.value.post!.length,
                    itemBuilder: (context, index) {
+                     DateTime dateTime = DateTime.parse(model.value.post![index].createdAt.toString());
+                     String formattedDate = DateFormat('yyyy dd MMMM').format(dateTime);
                      return Padding(
                        padding: const EdgeInsets.only(bottom: 26),
                        child: InkWell(
@@ -221,15 +244,30 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                      const Spacer(),
                                      IconButton(
                                          onPressed: () {
-                                           Get.to(
-                                               const MyFavouritePostScreen());
+                                           addToCart(
+                                               productId:  model.value.post![index].sId.toString(),
+                                               context: context)
+                                               .then((value) {
+                                             Likemodel.value = value;
+                                             if (value.success == true) {
+                                               showToast(value.message);
+                                               statusOfmylike.value = RxStatus.success();
+                                               getData1();
+                                             } else {
+                                               showToast(value.message);
+                                               statusOfmylike.value = RxStatus.error();
+                                             }
+                                           });
                                          },
-                                         icon: Image.asset(
+                                         icon:
+                                         model.value.post![index].likeCount == 0?
+                                         Image.asset(
                                            "assets/icons/dislike.png",
                                            height: 22,
                                            width: 22,
                                            color: const Color(0xffEF535E),
-                                         )
+                                         ):SvgPicture.asset("assets/icons/fillheart.svg" ,height: 22,
+                                           width: 22,)
                                        //Icon(Icons.heart_broken,color: Colors.red,size: 22,)
                                      )
                                    ],
@@ -256,8 +294,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                  Row(
                                    children: [
                                      Text(
-                                       model.value.post![index].createdAt
-                                           .toString(),
+                                 formattedDate,
                                        style: GoogleFonts.outfit(
                                            fontSize: 16,
                                            fontWeight: FontWeight.w500,
@@ -273,7 +310,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                            color: Colors.black,
                                          )),
                                      IconButton(
-                                         onPressed: () {},
+                                         onPressed: () {
+                                           shareProduct(productName, productDescription, productUrl);
+                                         },
                                          icon: Image.asset(
                                            "assets/icons/share.png",
                                            height: 22,
@@ -282,14 +321,14 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                          ))
                                    ],
                                  ),
-                                 Text(
-                                   model.value.post![index].comments
-                                       .toString(),
-                                   style: GoogleFonts.roboto(
-                                       fontSize: 14,
-                                       fontWeight: FontWeight.w400,
-                                       color: Colors.black),
-                                 )
+                                 // Text(
+                                 //   model.value.post![index].comments
+                                 //       .toString(),
+                                 //   style: GoogleFonts.roboto(
+                                 //       fontSize: 14,
+                                 //       fontWeight: FontWeight.w400,
+                                 //       color: Colors.black),
+                                 // )
                                ],
                              ),
                            ),
@@ -300,7 +339,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                  )
                ],
              )
-                 : const Center(child: CircularProgressIndicator());
+                 : Center(child: CircularProgressIndicator());
 
            })
           ),

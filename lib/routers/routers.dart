@@ -22,6 +22,8 @@ import 'package:Safeplate/screen/termscondition_screen.dart';
 import 'package:Safeplate/screen/verifyotp_screen.dart';
 import 'package:get/get.dart';
 
+import '../screen/chat_screen.dart';
+
 class MyRouter {
   static var splashScreen = "/splashScreen";
   static var route = [

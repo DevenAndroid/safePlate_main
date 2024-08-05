@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../widget/custom_appbar.dart';
 import '../../widget/network_images.dart';
+import '../chat_screen.dart';
 import '../comingsoon/coming_soon.dart';
 import '../scan/scan.dart';
 
