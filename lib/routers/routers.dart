@@ -23,6 +23,8 @@ import 'package:Safeplate/screen/verifyotp_screen.dart';
 import 'package:get/get.dart';
 
 import '../screen/chat_screen.dart';
+import '../screen/settings/communityandmyposts.dart';
+import '../screen/settings/family_member_edit.dart';
 
 class MyRouter {
   static var splashScreen = "/splashScreen";
@@ -46,7 +48,8 @@ class MyRouter {
     GetPage(name: AddFamilyMember.route, page: () => const AddFamilyMember()),
     GetPage(name: SacanScreen.route, page: () => const SacanScreen()),
     GetPage(name: BottomNavbar.route, page: () => const BottomNavbar()),
-    GetPage(name: ChatScreen.route, page: () =>  ChatScreen()),
+    GetPage(name: ChatScreen.route, page: () =>  const ChatScreen()),
+    // GetPage(name: AllFamilyMember.route, page: () =>   FamilyMemberEdit()),
 
   ];
 }

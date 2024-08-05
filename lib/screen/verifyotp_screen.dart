@@ -14,7 +14,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
-  const VerifyOtpScreen({super.key});
+
+
+   const VerifyOtpScreen({super.key});
 
   static var route = "/verifyOtpScreen";
 

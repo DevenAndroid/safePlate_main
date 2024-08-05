@@ -21,6 +21,7 @@ class ApiUrl{
 
 
   static const delete = "${baseUrl}removemember?membersemail=";
+  static const editFamilyMember = "${baseUrl}updatemember";
 
   static const createCommunity = "${baseUrl}addpost";
   static const getMyPost = "${baseUrl}posts";

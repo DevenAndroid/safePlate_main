@@ -8,6 +8,7 @@ import 'package:Safeplate/screen/settings/add_familymember_screen.dart';
 import '../../model/allfamily_member_model.dart';
 import '../../model/common_model.dart';
 import '../../widget/helper.dart';
+import 'family_member_edit.dart';
 
 class AllFamilyMember extends StatefulWidget {
   const AllFamilyMember({super.key});
@@ -145,7 +146,13 @@ class _AllFamilyMemberState extends State<AllFamilyMember> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    Get.to(()=>FamilyMemberEdit(email:family.value.membersdata![index].email));
+                                    // Get.toNamed(FamilyMemberEdit.route,
+                                    //     arguments:family.value.membersdata![index].email);
+                                  // Get.to( const FamilyMemberEdit(key: ));
+                                    // showCustomPersistentBottomSheet(context);
+                                  },
                                   child: Image.asset(
                                     "assets/icons/edit.png",
                                     height: 20,
@@ -188,27 +195,8 @@ class _AllFamilyMemberState extends State<AllFamilyMember> {
     );
   }
 
-  // Future<void> removeMember() async {
-  //   var headers = {
-  //     'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2YWM4NmIyNmFkZjM0OTYyMTE4YjBiYyIsInJvbGUiOiJ1c2VyIiwiZGlzYWJsZWQiOmZhbHNlLCJpYXQiOjE3MjI1ODc0NzEsImV4cCI6MTcyMzc5NzA3MX0.OUgUd3X-_8HafKzLODPb-pdBHDPgYmOJnntrJnpMD2M'
-  //   };
-  //   var request = http.Request(
-  //       'DELETE',
-  //       Uri.parse('https://safegate.webdemozone.com/api/v1/removemember?membersemail=rahul@gmail.com')
-  //   );
-  //
-  //   request.headers.addAll(headers);
-  //
-  //   try {
-  //     http.StreamedResponse response = await request.send();
-  //
-  //     if (response.statusCode == 200) {
-  //       print(await response.stream.bytesToString());
-  //     } else {
-  //       print(response.reasonPhrase);
-  //     }
-  //   } catch (e) {
-  //     print('An error occurred: $e');
-  //   }
-  // }
+
+
+
+
 }

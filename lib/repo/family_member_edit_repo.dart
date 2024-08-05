@@ -13,6 +13,7 @@ import '../model/family_member_edit_model.dart';
 Future<FamilyMemberEditModel> familyMemberEditRepo(
     {required String email,
       required  String name,
+      required  String images,
       required  String relationship,
       required  String phonenumber,
       required BuildContext context}) async {
@@ -27,7 +28,7 @@ Future<FamilyMemberEditModel> familyMemberEditRepo(
   log("Login Data map$map");
   try {
 
-    http.Response response = await http.post(Uri.parse(ApiUrl.forgotMailApi),
+    http.Response response = await http.patch(Uri.parse(ApiUrl.editFamilyMember),
         body: jsonEncode(map),headers: await getAuthHeader());
     if (response.statusCode == 200 ||
         response.statusCode == 201 ||
