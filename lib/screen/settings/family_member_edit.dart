@@ -1,45 +1,37 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:Safeplate/screen/settings/communityandmyposts.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:Safeplate/resources/dimension.dart';
-import 'package:Safeplate/widget/custom_textfield.dart';
 
-import '../../repo/addnew_family_repo.dart';
+import '../../repo/family_member_edit_repo.dart';
+import '../../resources/dimension.dart';
+import '../../widget/custom_textfield.dart';
 import '../../widget/helper.dart';
+import 'communityandmyposts.dart';
 
-class AddFamilyMember extends StatefulWidget {
-  const AddFamilyMember({super.key});
-  static var route = "/addFamilyMember";
+class FamilyMemberEdit extends StatefulWidget {
+
+  String?email;
+
+  FamilyMemberEdit({super.key, this.email});
+
+
+
+  static var route = "/editNewMember";
 
   @override
-  State<AddFamilyMember> createState() => _AddFamilyMemberState();
+  State<FamilyMemberEdit> createState() => _FamilyMemberEditState();
 }
 
-class _AddFamilyMemberState extends State<AddFamilyMember> {
+class _FamilyMemberEditState extends State<FamilyMemberEdit> {
   final _formKey = GlobalKey<FormState>();
-
-  // final nameController = TextEditingController();
-  // final relationsController = TextEditingController();
-  // final emailController = TextEditingController();
-  // final phoneNumberController = TextEditingController();
-  //
-  bool showValidation = false;
-
   TextEditingController nameController = TextEditingController();
-  // TextEditingController relationsController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
   TextEditingController phonenumberController = TextEditingController();
   TextEditingController relationshipController = TextEditingController();
-  bool? _isValue = false;
-  final RxStatus status = RxStatus.loading();
-  // TextEditingController confirmController = TextEditingController();
-
-
   File? _image;
   final ImagePicker _picker = ImagePicker();
 
@@ -54,7 +46,6 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
       log('No image selected.');
     }
   }
-
   Future<void> _pickImageFromCamera() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera);
 
@@ -66,12 +57,9 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
       log('No image selected.');
     }
   }
-
-
-
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       extendBody:false,
       resizeToAvoidBottomInset: false,
 
@@ -88,12 +76,12 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
             Icons.arrow_back_ios,color: Colors.white,
           ),
         ),
-        title: Text("Add New Family Member", style: GoogleFonts.roboto(
+        title: Text("Edit Family Member", style: GoogleFonts.roboto(
             fontSize: 16,
             fontWeight: FontWeight.w500,
             color:Colors.white),),
-
       ),
+
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
@@ -207,6 +195,13 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
                   padding: const EdgeInsets.symmetric(horizontal: 14,vertical: 15),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Center(
+                        child: Text(widget.email.toString(),  style: GoogleFonts.roboto(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15),),
+                      ),
+                       SizedBox(height:10),
+
                       Text(
                         "Name",
                         style: GoogleFonts.roboto(
@@ -216,52 +211,29 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
                       const SizedBox(
                         height: 12,
                       ),
-                       EditProfileTextFieldWidget(
-                         textInputAction: TextInputAction.next,
-                         keyboardType: TextInputType.name,
+                      EditProfileTextFieldWidget(
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.name,
                         hint: "Enter Your Name",
                         controller: nameController,
-                         validator: (value) {
-                           if (value!.trim().isEmpty) {
-                             return 'Name is required'.tr;
-                           } else if (value.length >= 30) {
-                             return 'Name cannot exceed 30 characters'.tr;
-                           }
-                           else if (RegExp(r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])').hasMatch(value)) {
-                             return 'Name is not accept in emoji'.tr;
-                           }
-                           return null;
-                         },
+                        validator: (value) {
+                          if (value!.trim().isEmpty) {
+                            return 'Please Enter Name'.tr;
+                          } else if (value.length >= 30) {
+                            return 'Name cannot exceed 30 characters'.tr;
+                          }
+                          else if (RegExp(r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])').hasMatch(value)) {
+                            return 'Name is not accept in emoji'.tr;
+                          }
+                          return null;
+                        },
 
                         // controller: nameController.,
                       ),
                       const SizedBox(
                         height: 25,
                       ),
-                      Text(
-                        "Email",
-                        style: GoogleFonts.roboto(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15),
-                      ),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                       EditProfileTextFieldWidget(
-                        hint: "Enter Your Email",
-                        controller:emailController,
-                         keyboardType: TextInputType.emailAddress,
-                         validator: (value) {
-                           if (value!.isEmpty) {
-                             return "Email is required";
-                           } else {
-                             return null;
-                           }
-                         },
-                      ),
-                      const SizedBox(
-                        height: 25,
-                      ),
+
                       Text(
                         "Phone Number",
                         style: GoogleFonts.roboto(
@@ -319,32 +291,26 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
                       ),
                       ElevatedButton(
                           onPressed: () async {
-                           if (_formKey.currentState!.validate()) {
-                             addFamilyMemberRepo(
+                             if (_formKey.currentState!.validate()) {
+                               familyMemberEditRepo(
                                   name: nameController.text,
-                                  email: emailController.text,
-                                 phonenumber:phonenumberController.text,
-                                  images:_image ?? "" ,
-                                 relationship: relationshipController.text,
+                                  email: widget.email.toString(),
+                                  phonenumber:phonenumberController.text,
+                                  images:_image.toString() ,
+                                  relationship: relationshipController.text,
                                   context: context
-
 
 
                               ).then((value) {
                                 if (value.success == true) {
-
+                                  Get.offAll(()=>AllFamilyMember() );
                                   print("data${value.message}");
                                   showToast(value.message);
-                                  // Get.back();
-                                  Get.offAll(const AllFamilyMember());
-                                  // Get.toNamed(AddFamilyMember.route);
-                                  print("emailController${emailController.text}");
 
-                                  //  Get.toNamed(LoginScreen.route);
                                 }
                                 else {
                                   print("data>>>>>>>");
-                                  //Get.toNamed(SignupOtp.route, arguments: emailController.text);
+
                                   showToast(value.message);
                                 }
                               });
@@ -376,7 +342,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
           ),
         ),
       ),
+
     );
   }
 }
- 
