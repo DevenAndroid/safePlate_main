@@ -104,7 +104,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                       hint: 'Enter Your Name',
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "Email or Phone is required";
+                          return "Name is required";
                         } else {
                           return null;
                         }
@@ -354,39 +354,39 @@ class _MyPostScreenState extends State<MyPostScreen> {
                                             fontWeight: FontWeight.w500,
                                             color: Colors.black),
                                       ),
-                                      SizedBox(
-                                        height: height * 0.01,
-                                      ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            color: Colors.white),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 8),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                "Sort By",
-                                                style: GoogleFonts.roboto(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Colors.black),
-                                              ),
-                                              const Icon(
-                                                Icons.keyboard_arrow_down_sharp,
-                                                color: Colors.black,
-                                                size: 22,
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      )
+                                      // SizedBox(
+                                      //   height: height * 0.01,
+                                      // ),
+                                      // Container(
+                                      //   decoration: BoxDecoration(
+                                      //       borderRadius:
+                                      //           BorderRadius.circular(10),
+                                      //       color: Colors.white),
+                                      //   child: Padding(
+                                      //     padding: const EdgeInsets.symmetric(
+                                      //         horizontal: 16, vertical: 8),
+                                      //     child: Row(
+                                      //       crossAxisAlignment:
+                                      //           CrossAxisAlignment.center,
+                                      //       mainAxisAlignment:
+                                      //           MainAxisAlignment.center,
+                                      //       children: [
+                                      //         Text(
+                                      //           "Sort By",
+                                      //           style: GoogleFonts.roboto(
+                                      //               fontSize: 14,
+                                      //               fontWeight: FontWeight.w400,
+                                      //               color: Colors.black),
+                                      //         ),
+                                      //         const Icon(
+                                      //           Icons.keyboard_arrow_down_sharp,
+                                      //           color: Colors.black,
+                                      //           size: 22,
+                                      //         )
+                                      //       ],
+                                      //     ),
+                                      //   ),
+                                      // )
                                     ],
                                   )
                                 ],

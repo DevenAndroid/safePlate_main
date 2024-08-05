@@ -158,38 +158,38 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                    fontWeight: FontWeight.w500,
                                    color: Colors.black),
                              ),
-                             SizedBox(
-                               height: height * 0.01,
-                             ),
-                             Container(
-                               decoration: BoxDecoration(
-                                   borderRadius: BorderRadius.circular(10),
-                                   color: Colors.white),
-                               child: Padding(
-                                 padding: const EdgeInsets.symmetric(
-                                     horizontal: 16, vertical: 8),
-                                 child: Row(
-                                   crossAxisAlignment:
-                                   CrossAxisAlignment.center,
-                                   mainAxisAlignment:
-                                   MainAxisAlignment.center,
-                                   children: [
-                                     Text(
-                                       "Sort By",
-                                       style: GoogleFonts.roboto(
-                                           fontSize: 14,
-                                           fontWeight: FontWeight.w400,
-                                           color: Colors.black),
-                                     ),
-                                     const Icon(
-                                       Icons.keyboard_arrow_down_sharp,
-                                       color: Colors.black,
-                                       size: 22,
-                                     )
-                                   ],
-                                 ),
-                               ),
-                             )
+                             // SizedBox(
+                             //   height: height * 0.01,
+                             // ),
+                             // Container(
+                             //   decoration: BoxDecoration(
+                             //       borderRadius: BorderRadius.circular(10),
+                             //       color: Colors.white),
+                             //   child: Padding(
+                             //     padding: const EdgeInsets.symmetric(
+                             //         horizontal: 16, vertical: 8),
+                             //     child: Row(
+                             //       crossAxisAlignment:
+                             //       CrossAxisAlignment.center,
+                             //       mainAxisAlignment:
+                             //       MainAxisAlignment.center,
+                             //       children: [
+                             //         Text(
+                             //           "Sort By",
+                             //           style: GoogleFonts.roboto(
+                             //               fontSize: 14,
+                             //               fontWeight: FontWeight.w400,
+                             //               color: Colors.black),
+                             //         ),
+                             //         const Icon(
+                             //           Icons.keyboard_arrow_down_sharp,
+                             //           color: Colors.black,
+                             //           size: 22,
+                             //         )
+                             //       ],
+                             //     ),
+                             //   ),
+                             // )
                            ],
                          )
                        ],
@@ -310,8 +310,9 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                            color: Colors.black,
                                          )),
                                      IconButton(
-                                         onPressed: () {
-                                           shareProduct(productName, productDescription, productUrl);
+                                         onPressed: () async {
+                                         await   Share.share('https://wallpaperaccess.com/full/1401021.jpg',
+                                                subject: 'Welcome Message');
                                          },
                                          icon: Image.asset(
                                            "assets/icons/share.png",
