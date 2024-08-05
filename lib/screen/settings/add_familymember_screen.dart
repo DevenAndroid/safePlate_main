@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:Safeplate/screen/settings/communityandmyposts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -8,8 +9,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:Safeplate/resources/dimension.dart';
 import 'package:Safeplate/widget/custom_textfield.dart';
 
-import '../repo/addnew_family_repo.dart';
-import '../widget/helper.dart';
+import '../../repo/addnew_family_repo.dart';
+import '../../widget/helper.dart';
 
 class AddFamilyMember extends StatefulWidget {
   const AddFamilyMember({super.key});
@@ -33,6 +34,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
   // TextEditingController relationsController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController phonenumberController = TextEditingController();
+  TextEditingController relationshipController = TextEditingController();
   bool? _isValue = false;
   final RxStatus status = RxStatus.loading();
   // TextEditingController confirmController = TextEditingController();
@@ -286,6 +288,33 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
                         },
                       ),
                       const SizedBox(
+                        height: 25,
+                      ),
+                      Text(
+                        "Relationship",
+                        style: GoogleFonts.roboto(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15),
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      EditProfileTextFieldWidget(
+                        hint: "Enter Your Relationship",
+                        controller:relationshipController,
+                        keyboardType: TextInputType.name,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "Relationship is required";
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      const SizedBox(
                         height: 60,
                       ),
                       ElevatedButton(
@@ -296,6 +325,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
                                   email: emailController.text,
                                  phonenumber:phonenumberController.text,
                                   images:_image ?? "" ,
+                                 relationship: relationshipController.text,
                                   context: context
 
 
@@ -305,8 +335,9 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
 
                                   print("data${value.message}");
                                   showToast(value.message);
-                                  Get.back();
-                                  //Get.toNamed(SignupOtp.route, arguments: emailController.text);
+                                  // Get.back();
+                                  Get.to(const AllFamilyMember());
+                                  // Get.toNamed(AddFamilyMember.route);
                                   print("emailController${emailController.text}");
 
                                   //  Get.toNamed(LoginScreen.route);

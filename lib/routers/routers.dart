@@ -7,7 +7,7 @@ import 'package:Safeplate/screen/BottomNavBar/home.dart';
 import 'package:Safeplate/screen/BottomNavBar/profile_screen.dart';
 import 'package:Safeplate/screen/Notification_screen.dart';
 import 'package:Safeplate/screen/PrivacySecurity_screen.dart';
-import 'package:Safeplate/screen/add_familymember_screen.dart';
+import 'package:Safeplate/screen/settings/add_familymember_screen.dart';
 import 'package:Safeplate/screen/changepassword_screen.dart';
 import 'package:Safeplate/screen/chat_screen/chat_screen.dart';
 import 'package:Safeplate/screen/forgot_screen.dart';

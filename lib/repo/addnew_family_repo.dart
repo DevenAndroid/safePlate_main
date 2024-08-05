@@ -13,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../model/addnew_family_model.dart';
 
 Future<AddNewFamilyMemberModel> addFamilyMemberRepo(
-    {name, email, phonenumber, images, required BuildContext context}) async {
+    {name, email, phonenumber, images,relationship, required BuildContext context}) async {
   OverlayEntry loader = NewHelper.overlayLoader(context);
   Overlay.of(context).insert(loader);
 
@@ -21,6 +21,7 @@ Future<AddNewFamilyMemberModel> addFamilyMemberRepo(
   map['name'] = name;
   map['email'] = email;
   map['phonenumber'] = phonenumber;
+  map['relationship'] = relationship;
  // http.MultipartFile.fromPath('file', images!.path ?? "");
   // map['file'] = http.MultipartFile.fromPath(images);
   // request.files.add(await http.MultipartFile.fromPath('file', _image!.path));
