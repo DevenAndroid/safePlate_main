@@ -3,10 +3,10 @@ import 'package:Safeplate/repo/allfamily_member_repo.dart';
 import 'package:Safeplate/repo/delete_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:Safeplate/screen/add_familymember_screen.dart';
+import 'package:Safeplate/screen/settings/add_familymember_screen.dart';
 import '../../model/allfamily_member_model.dart';
+import '../../model/common_model.dart';
 import '../../widget/helper.dart';
 
 class AllFamilyMember extends StatefulWidget {
@@ -21,12 +21,32 @@ class _AllFamilyMemberState extends State<AllFamilyMember> {
   Rx<RxStatus> statusOfFamilyMember = RxStatus.empty().obs;
   Rx<FamilyMemberModel> family = FamilyMemberModel().obs;
 
+  Rx<RxStatus> statusOfdelete = RxStatus.empty().obs;
+  Rx<CommonModel> deleteMember = CommonModel().obs;
+
+  delete(email){
+    deleteRepo(
+        email: email,
+        context: context) .then(
+            (value) async {
+          if (value.success == true) {
+            // statusOfdelete.value.isSuccess?
+            // showToast(value.message):
+            // CircularProgressIndicator();
+            showToast(value.message);
+            allFamily();
+          } else {
+            showToast(value.message);
+          }
+        });
+  }
 
   allFamily(){
     allFamilyMemberRepo().then((value) {
       log("response.body.....    ${value}");
       family.value = value;
       if (value.success == true) {
+
         statusOfFamilyMember.value = RxStatus.success();
         showToast(value.message);
         print("11111111111111111111111${value.message.toString()}");
@@ -37,6 +57,7 @@ class _AllFamilyMemberState extends State<AllFamilyMember> {
       }
     });
   }
+
   @override
   void initState() {
     super.initState();
@@ -85,7 +106,9 @@ class _AllFamilyMemberState extends State<AllFamilyMember> {
               return statusOfFamilyMember.value.isSuccess
                   ? Column(
                 children: [
-                  family.value.membersdata!.length.toString() == 0?
+                  family.value.membersdata!.isEmpty?
+
+                       Center(child: Text("No Family Member Available"),) :
                   ListView.builder(
                     itemCount: family.value.membersdata!.length,
                     physics: const NeverScrollableScrollPhysics(),
@@ -130,18 +153,7 @@ class _AllFamilyMemberState extends State<AllFamilyMember> {
                                   )),
                               GestureDetector(
                                   onTap: () {
-                                    deleteRepo(
-                                        email: family.value
-                                            .membersdata![index].email,
-                                        context: context) .then(
-                                            (value) async {
-                                          if (value.success == true) {
-                                            showToast(value.message);
-                                            allFamily();
-                                          } else {
-                                            showToast(value.message);
-                                          }
-                                        });
+                                    delete( family.value.membersdata![index].email);
                                   },
                                   child: Image.asset(
                                     "assets/icons/delete.png",
@@ -155,7 +167,6 @@ class _AllFamilyMemberState extends State<AllFamilyMember> {
                       );
                     },
                   )
-                      : Center(child: Text("No Family Member Available"),)
                 ],
               )
                   : const Center(

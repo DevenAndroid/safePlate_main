@@ -1,19 +1,18 @@
 class ProfileModel {
-  // User? user;
   User? user;
   dynamic message;
   bool? success;
 
   ProfileModel({this.user, this.message, this.success});
 
-  ProfileModel.fromJson(Map<dynamic, dynamic> json) {
+  ProfileModel.fromJson(Map<String, dynamic> json) {
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     message = json['message'];
     success = json['success'];
   }
 
-  Map<dynamic, dynamic> toJson() {
-    final Map<dynamic, dynamic> data = new Map<dynamic, dynamic>();
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.user != null) {
       data['user'] = this.user!.toJson();
     }
@@ -33,9 +32,10 @@ class User {
   dynamic postcode;
   dynamic aboutme;
   BMI? bMI;
-  int? age;
-  List<String>? allergies;
+  dynamic age;
+  dynamic gender;
   dynamic healthConditions;
+  bool? isapproved;
 
   User(
       {this.sId,
@@ -48,8 +48,9 @@ class User {
         this.aboutme,
         this.bMI,
         this.age,
-        this.allergies,
-        this.healthConditions});
+        this.gender,
+        this.healthConditions,
+        this.isapproved});
 
   User.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -61,9 +62,10 @@ class User {
     postcode = json['postcode'];
     aboutme = json['aboutme'];
     bMI = json['BMI'] != null ? new BMI.fromJson(json['BMI']) : null;
-    allergies = json['allergies'].cast<String>();
     age = json['age'];
+    gender = json['gender'];
     healthConditions = json['health_conditions'];
+    isapproved = json['isapproved'];
   }
 
   Map<String, dynamic> toJson() {
@@ -80,8 +82,9 @@ class User {
       data['BMI'] = this.bMI!.toJson();
     }
     data['age'] = this.age;
-    data['allergies'] = this.allergies;
+    data['gender'] = this.gender;
     data['health_conditions'] = this.healthConditions;
+    data['isapproved'] = this.isapproved;
     return data;
   }
 }
@@ -99,7 +102,7 @@ class BMI {
     weight = json['weight'];
     unit = json['Unit'];
     ft = json['ft'];
-    inch = json['In.'];
+    inch = json['Inch'];
     unit2 = json['Unit_2'];
   }
 
@@ -108,7 +111,7 @@ class BMI {
     data['weight'] = this.weight;
     data['Unit'] = this.unit;
     data['ft'] = this.ft;
-    data['In.'] = this.inch;
+    data['Inch'] = this.inch;
     data['Unit_2'] = this.unit2;
     return data;
   }

@@ -9,29 +9,41 @@ import '../model/update_profile_model.dart';
 
 Future<UpdateProfileModel> updateProfileRepo(
     {
+      name,email,phoneNumber,
+      //Dob,
+     postcode,
+      aboutme,weight,
+      unit,
+      ft,ini,
+      unit2,
+      age,
+      //allergies,
+      gender,health,
 
       required BuildContext context}) async {
   OverlayEntry loader = NewHelper.overlayLoader(context);
   Overlay.of(context).insert(loader);
+  dynamic ages;
+  ages = int.parse(age).toInt();
 
   final body = jsonEncode({
-    'name': 'ankur',
-    'email': 'Ankur07@yopmail.com',
-    'phonenumber': '5978965898',
-    'dob': '1999-07-07',
-    'postcode': '12345',
-    'aboutme': 'I love coding and hiking.',
+    'name': name,//'ankur',
+    'email': email,//'Ankur07@yopmail.com',
+    'phonenumber': phoneNumber,//'5978965898',
+   // 'dob': '1999-07-07',
+    'postcode':postcode,// '12345',
+    'aboutme': aboutme,//'I love coding and hiking.',
     'BMI': {
-      'weight': '20kg',
-      'Unit': '3',
-      'ft': '8.9',
-      'In.': '12',
-      'Unit_2': '7'
+      'weight': weight,//'20kg',
+      'Unit': unit,//'3',
+      'ft': ft,//'8.9',
+      'In.': ini,//'12',
+      'Unit_2':unit2// '7'
     },
-    'age': 25,
-    'allergies': ['peanuts', 'shellfish'],
-    'gender': 'male',
-    'health_conditions': ['asthma', 'hypertension']
+    'Age':ages,// 25,
+    //'allergies': ['peanuts', 'shellfish'],
+    'gender': gender,//'male',
+    'health_conditions': health,//['asthma', 'hypertension']
   });
 
   log("Login Data map$body");
