@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../model/mypostcommunity_model.dart';
 class MyFavouritePostScreen extends StatefulWidget {
   const MyFavouritePostScreen({super.key});
 
@@ -10,7 +11,13 @@ class MyFavouritePostScreen extends StatefulWidget {
 }
 
 class _MyFavouritePostScreenState extends State<MyFavouritePostScreen> {
+  Rx<MyPostCommunity> model = MyPostCommunity().obs;
+
+
+
+
   @override
+
   Widget build(BuildContext context) {
     var height= MediaQuery.sizeOf(context).height ;
     var width= MediaQuery.sizeOf(context).width ;
@@ -98,7 +105,7 @@ class _MyFavouritePostScreenState extends State<MyFavouritePostScreen> {
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: 10,
+                  itemCount: 4,
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 26),
