@@ -8,6 +8,7 @@ import 'package:Safeplate/screen/settings/add_familymember_screen.dart';
 import '../../model/allfamily_member_model.dart';
 import '../../model/common_model.dart';
 import '../../widget/helper.dart';
+import '../login_screen.dart';
 import 'family_member_edit.dart';
 
 class AllFamilyMember extends StatefulWidget {
@@ -158,15 +159,20 @@ class _AllFamilyMemberState extends State<AllFamilyMember> {
                                     height: 20,
                                     width: 20,
                                   )),
+                              mail==family.value.membersdata![index].email?
+                              const SizedBox(height: 0,width: 0,)
+                                  :
                               GestureDetector(
                                   onTap: () {
-                                    delete( family.value.membersdata![index].email);
+
+                                    delete(family.value.membersdata![index].email);
                                   },
                                   child: Image.asset(
                                     "assets/icons/delete.png",
                                     height: 20,
                                     width: 20,
                                   ))
+
                               // IconButton(onPressed: onPressed, icon: icon)
                             ],
                           ),

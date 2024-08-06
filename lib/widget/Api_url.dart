@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiUrl{
   static const baseUrl = "https://safegate.webdemozone.com/api/v1/";
+  static const onBoarding = "${baseUrl}onboarding";
   static const loginApi = "${baseUrl}login";
   static const signApi = "${baseUrl}register";
   static const forgotMailApi = "${baseUrl}forgotPassword";
@@ -34,6 +35,7 @@ Future getAuthHeader() async {
   var gg = {
     HttpHeaders.contentTypeHeader: 'application/json',
     HttpHeaders.acceptHeader: 'application/json',
+    'Content-Type': 'application/json; charset=UTF-8',
     if (pref.getString("cookie") != null)
       HttpHeaders.authorizationHeader:
       'Bearer ${pref.getString("cookie")!.toString().replaceAll('\"', '')}',

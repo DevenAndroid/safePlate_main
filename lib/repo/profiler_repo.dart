@@ -16,16 +16,19 @@ Future<ProfileModel> profileRepo() async {
     );
 
     if (response.statusCode == 200) {
-      print(jsonDecode(response.body));
+
+      print("data1${jsonDecode(response.body)}");
       return ProfileModel.fromJson(jsonDecode(response.body));
     } else {
-      print(jsonDecode(response.body));
+
+      print("data2${jsonDecode(response.body)}");
       return ProfileModel(
           message: jsonDecode(response.body)["message"],
           success: false,
           user: null);
     }
   } catch (e) {
+    print("errorrrrrrrrrrrrrrrrrrr");
     return ProfileModel(message: e.toString(), success: false, user: null);
   }
 }

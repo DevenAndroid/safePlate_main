@@ -48,8 +48,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
       body: Obx(() {
-        return profileController.statusOfProfile.value.isSuccess
-            ? Padding(
+        return
+          profileController.statusOfProfile.value.isSuccess
+            ?
+          Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: SingleChildScrollView(
@@ -341,17 +343,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   decoration: InputDecoration(
                                     hintText: '10 In',
                                     enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
+                                        borderSide: const BorderSide(
                                             color: Color(0xffAFAFAF)),
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
+                                        borderSide: const BorderSide(
                                             color: Color(0xffAFAFAF)),
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     disabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
+                                        borderSide: const BorderSide(
                                             color: Color(0xffAFAFAF)),
                                         borderRadius:
                                             BorderRadius.circular(10)),
@@ -496,6 +498,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       ElevatedButton(
                           onPressed: () async {
+                            print("SDWASFFEWSDFSFWRFW =>${profileController.selectUnit}");
+                            print("SDWASFFEWSDFSFWRFW =>${profileController.inchController.text}");
                             updateProfileRepo(
                                     name: profileController.nameController.text,
                                     email: profileController.emailController.text,
@@ -513,9 +517,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     context: context)
                                 .then((value) async {
                               if (value.success == true) {
+                                print("data1${value.message}");
                                 showToast(value.message);
                                 profileController.getProfile();
                               } else {
+                                print("data2${value.message}");
                                 showToast(value.message);
                               }
                             });
@@ -542,7 +548,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               )
-            : const Center(child: CircularProgressIndicator());
+             : const Center(child: CircularProgressIndicator());
       }),
     );
   }
