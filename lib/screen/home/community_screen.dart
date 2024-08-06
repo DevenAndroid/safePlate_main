@@ -208,7 +208,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                        padding: const EdgeInsets.only(bottom: 26),
                        child: InkWell(
                          onTap: () {
-                           Get.to(const SinglePostScreen());
+                           // Get.toNamed(SinglePostScreen.route,arguments: );
                          },
                          child: Container(
                            decoration: BoxDecoration(
@@ -217,7 +217,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                            child: Padding(
                              padding: const EdgeInsets.symmetric(
                                  horizontal: 16, vertical: 20),
-                             child: Column(
+                             child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                                children: [
                                  Row(
                                    children: [
@@ -322,14 +322,14 @@ class _CommunityScreenState extends State<CommunityScreen> {
                                          ))
                                    ],
                                  ),
-                                 // Text(
-                                 //   model.value.post![index].comments
-                                 //       .toString(),
-                                 //   style: GoogleFonts.roboto(
-                                 //       fontSize: 14,
-                                 //       fontWeight: FontWeight.w400,
-                                 //       color: Colors.black),
-                                 // )
+                                 Text(
+                                   model.value.post![index].caption
+                                       .toString(),
+                                   style: GoogleFonts.roboto(
+                                       fontSize: 14,
+                                       fontWeight: FontWeight.w400,
+                                       color: Colors.black),
+                                 ),
                                ],
                              ),
                            ),

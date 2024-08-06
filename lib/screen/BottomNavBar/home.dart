@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:Safeplate/screen/BottomNavBar/profile_screen.dart';
 import 'package:Safeplate/screen/chat_screen/chat_screen.dart';
 import 'package:Safeplate/screen/home/community_screen.dart';
 import 'package:Safeplate/screen/home/setting.dart';
@@ -117,17 +118,21 @@ Widget build(BuildContext context) {
                               ),),
                             Spacer(),
                             //SizedBox(width: Get.width*0.5),
-                            Container(
-                              decoration:BoxDecoration(
-                                  border: Border.all(color: Colors.white,width: 2),
-                                  borderRadius: BorderRadius.circular(4)
+                            GestureDetector(onTap: (){
+                              Get.toNamed(ProfileScreen.route);
+                            },
+                              child: Container(
+                                decoration:BoxDecoration(
+                                    border: Border.all(color: Colors.white,width: 2),
+                                    borderRadius: BorderRadius.circular(4)
 
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
-                                child: Center(
-                                  child: Text("Login/signup",style: GoogleFonts.roboto(
-                                      fontSize: 10, fontWeight: FontWeight.w400, color:Colors.white),),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
+                                  child: Center(
+                                    child: Text("Profile",style: GoogleFonts.roboto(
+                                        fontSize: 10, fontWeight: FontWeight.w400, color:Colors.white),),
+                                  ),
                                 ),
                               ),
                             ),

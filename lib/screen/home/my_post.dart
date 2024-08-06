@@ -218,9 +218,6 @@ class _MyPostScreenState extends State<MyPostScreen> {
 
                             );
                           }
-
-
-                          // Get.back();
                         },
                         style: ElevatedButton.styleFrom(
 
@@ -308,242 +305,272 @@ class _MyPostScreenState extends State<MyPostScreen> {
             )
           ],
         ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Obx(() {
-                if (refreshInt.value > 0) {}
-                return statusOfmypost.value.isSuccess
-                    ? Column(
-                        children: [
-                          SizedBox(
-                            height: height * 0.01,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                                color: const Color(0xffE9F7E3),
-                                borderRadius: BorderRadius.circular(2)),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 16),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    maxRadius: 40,
-                                    backgroundColor: const Color(0xff75D051),
-                                    child: Center(
-                                      child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: Image.asset(
-                                            "assets/images/user.png",
-                                          )),
-                                    ),
-                                  ),
-                                  SizedBox(width: width * 0.04),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Welcome Adrian!",
-                                        style: GoogleFonts.roboto(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.black),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            getData();
+          },
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Obx(() {
+                  if (refreshInt.value > 0) {}
+                  return statusOfmypost.value.isSuccess
+                      ? Column(
+                          children: [
+                            SizedBox(
+                              height: height * 0.01,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: const Color(0xffE9F7E3),
+                                  borderRadius: BorderRadius.circular(2)),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 16),
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      maxRadius: 40,
+                                      backgroundColor: const Color(0xff75D051),
+                                      child: Center(
+                                        child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Image.asset(
+                                              "assets/images/user.png",
+                                            )),
                                       ),
-                                      // SizedBox(
-                                      //   height: height * 0.01,
-                                      // ),
-                                      // Container(
-                                      //   decoration: BoxDecoration(
-                                      //       borderRadius:
-                                      //           BorderRadius.circular(10),
-                                      //       color: Colors.white),
-                                      //   child: Padding(
-                                      //     padding: const EdgeInsets.symmetric(
-                                      //         horizontal: 16, vertical: 8),
-                                      //     child: Row(
-                                      //       crossAxisAlignment:
-                                      //           CrossAxisAlignment.center,
-                                      //       mainAxisAlignment:
-                                      //           MainAxisAlignment.center,
-                                      //       children: [
-                                      //         Text(
-                                      //           "Sort By",
-                                      //           style: GoogleFonts.roboto(
-                                      //               fontSize: 14,
-                                      //               fontWeight: FontWeight.w400,
-                                      //               color: Colors.black),
-                                      //         ),
-                                      //         const Icon(
-                                      //           Icons.keyboard_arrow_down_sharp,
-                                      //           color: Colors.black,
-                                      //           size: 22,
-                                      //         )
-                                      //       ],
-                                      //     ),
-                                      //   ),
-                                      // )
-                                    ],
-                                  )
-                                ],
+                                    ),
+                                    SizedBox(width: width * 0.04),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Welcome Adrian!",
+                                          style: GoogleFonts.roboto(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black),
+                                        ),
+                                        // SizedBox(
+                                        //   height: height * 0.01,
+                                        // ),
+                                        // Container(
+                                        //   decoration: BoxDecoration(
+                                        //       borderRadius:
+                                        //           BorderRadius.circular(10),
+                                        //       color: Colors.white),
+                                        //   child: Padding(
+                                        //     padding: const EdgeInsets.symmetric(
+                                        //         horizontal: 16, vertical: 8),
+                                        //     child: Row(
+                                        //       crossAxisAlignment:
+                                        //           CrossAxisAlignment.center,
+                                        //       mainAxisAlignment:
+                                        //           MainAxisAlignment.center,
+                                        //       children: [
+                                        //         Text(
+                                        //           "Sort By",
+                                        //           style: GoogleFonts.roboto(
+                                        //               fontSize: 14,
+                                        //               fontWeight: FontWeight.w400,
+                                        //               color: Colors.black),
+                                        //         ),
+                                        //         const Icon(
+                                        //           Icons.keyboard_arrow_down_sharp,
+                                        //           color: Colors.black,
+                                        //           size: 22,
+                                        //         )
+                                        //       ],
+                                        //     ),
+                                        //   ),
+                                        // )
+                                      ],
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: height * 0.036),
-                          ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: model.value.post!.length,
-                            itemBuilder: (context, index) {
-                              DateTime dateTime = DateTime.parse(model.value.post![index].createdAt.toString());
-                              String formattedDate = DateFormat('yyyy dd MMMM').format(dateTime);
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 26),
-                                child: InkWell(
-                                  onTap: () {
-                                    Get.to(const SinglePostScreen());
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        color: Colors.white),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16, vertical: 20),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              ClipRRect(
+                            SizedBox(height: height * 0.036),
+                            ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: model.value.post!.length,
+                              itemBuilder: (context, index) {
+                                DateTime dateTime = DateTime.parse(model
+                                    .value.post![index].createdAt
+                                    .toString());
+                                String formattedDate =
+                                    DateFormat('yyyy dd MMMM').format(dateTime);
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 26),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Get.to(()=>SinglePostScreen(
+                                          id: model.value.post![index].sId.toString(),
+
+                                      ));
+                                      // Get.toNamed(SinglePostScreen.route,arguments: model.value.post![index].sId);
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          color: Colors.white),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16, vertical: 20),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  child: Image.asset(
+                                                    "assets/images/user.png",
+                                                    height: 50,
+                                                    width: 50,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: width * 0.06,
+                                                ),
+                                                Text(
+                                                  model.value.post![index].name
+                                                      .toString(),
+                                                  style: GoogleFonts.roboto(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Colors.black),
+                                                ),
+                                                const Spacer(),
+                                                IconButton(
+                                                    onPressed: () {
+                                                      addToCart(
+                                                              productId: model
+                                                                  .value
+                                                                  .post![index]
+                                                                  .sId
+                                                                  .toString(),
+                                                              context: context)
+                                                          .then((value) {
+                                                        Likemodel.value = value;
+                                                        if (value.success ==
+                                                            true) {
+                                                          showToast(
+                                                              value.message);
+                                                          statusOfmylike.value =
+                                                              RxStatus
+                                                                  .success();
+                                                          getData();
+                                                        } else {
+                                                          showToast(
+                                                              value.message);
+                                                          statusOfmylike.value =
+                                                              RxStatus.error();
+                                                        }
+                                                      });
+                                                    },
+                                                    icon: model
+                                                                .value
+                                                                .post![index]
+                                                                .likeCount ==
+                                                            0
+                                                        ? Image.asset(
+                                                            "assets/icons/dislike.png",
+                                                            height: 22,
+                                                            width: 22,
+                                                            color: const Color(
+                                                                0xffEF535E),
+                                                          )
+                                                        : SvgPicture.asset(
+                                                            "assets/icons/fillheart.svg",
+                                                            height: 22,
+                                                            width: 22,
+                                                          )
+                                                    //Icon(Icons.heart_broken,color: Colors.red,size: 22,)
+                                                    )
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: height * 0.016,
+                                            ),
+                                            Container(
+                                              height: 200,
+                                              width: width,
+                                              decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(10),
-                                                child: Image.asset(
-                                                  "assets/images/user.png",
-                                                  height: 50,
-                                                  width: 50,
+                                                color: Colors.red,
+                                              ),
+                                              child: Image.asset(
+                                                "assets/images/order.png",
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: height * 0.006,
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  formattedDate,
+                                                  style: GoogleFonts.outfit(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: const Color(
+                                                          0xff273B4A)),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                width: width * 0.06,
-                                              ),
-                                              Text(
-                                                model.value.post![index].name
-                                                    .toString(),
-                                                style: GoogleFonts.roboto(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.black),
-                                              ),
-                                              const Spacer(),
-
-
-                                              IconButton(
-                                                  onPressed: () {
-                                                    addToCart(
-                                                        productId:  model.value.post![index].sId.toString(),
-                                                        context: context)
-                                                        .then((value) {
-                                                      Likemodel.value = value;
-                                                      if (value.success == true) {
-                                                        showToast(value.message);
-                                                        statusOfmylike.value = RxStatus.success();
-                                                        getData();
-                                                      } else {
-                                                        showToast(value.message);
-                                                        statusOfmylike.value = RxStatus.error();
-                                                      }
-                                                    });
-                                                  },
-
-
-                                                  icon:
-
-                                                  model.value.post![index].likeCount == 0?
-
-                                                  Image.asset(
-                                                    "assets/icons/dislike.png",
-                                                    height: 22,
-                                                    width: 22,
-                                                    color:
-                                                        const Color(0xffEF535E),
-                                                  ):SvgPicture.asset("assets/icons/fillheart.svg" ,height: 22,
-                                                    width: 22,)
-                                                  //Icon(Icons.heart_broken,color: Colors.red,size: 22,)
-                                                  )
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: height * 0.016,
-                                          ),
-                                          Container(
-                                            height: 200,
-                                            width: width,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: Colors.red,
+                                                const Spacer(),
+                                                IconButton(
+                                                    onPressed: () {},
+                                                    icon: Image.asset(
+                                                      "assets/icons/comment.png",
+                                                      height: 22,
+                                                      width: 22,
+                                                      color: Colors.black,
+                                                    )),
+                                                IconButton(
+                                                    onPressed: () {},
+                                                    icon: Image.asset(
+                                                      "assets/icons/share.png",
+                                                      height: 22,
+                                                      width: 22,
+                                                      color: Colors.black,
+                                                    ))
+                                              ],
                                             ),
-                                            child: Image.asset(
-                                              "assets/images/order.png",
-                                              fit: BoxFit.fill,
+                                            Text(
+                                              model.value.post![index].caption
+                                                  .toString(),
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.black),
                                             ),
-                                          ),
-                                          SizedBox(
-                                            height: height * 0.006,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                          formattedDate,
-                                                style: GoogleFonts.outfit(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: const Color(
-                                                        0xff273B4A)),
-                                              ),
-                                              const Spacer(),
-                                              IconButton(
-                                                  onPressed: () {},
-                                                  icon: Image.asset(
-                                                    "assets/icons/comment.png",
-                                                    height: 22,
-                                                    width: 22,
-                                                    color: Colors.black,
-                                                  )),
-                                              IconButton(
-                                                  onPressed: () {},
-                                                  icon: Image.asset(
-                                                    "assets/icons/share.png",
-                                                    height: 22,
-                                                    width: 22,
-                                                    color: Colors.black,
-                                                  ))
-                                            ],
-                                          ),
-                                          // Text(
-                                          //   model.value.post![index].comments
-                                          //       .toString(),
-                                          //   style: GoogleFonts.roboto(
-                                          //       fontSize: 14,
-                                          //       fontWeight: FontWeight.w400,
-                                          //       color: Colors.black),
-                                          // )
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
-                          )
-                        ],
-                      )
-                    : Center(child: CircularProgressIndicator());
-              }),
+                                );
+                              },
+                            )
+                          ],
+                        )
+                      : Center(child: CircularProgressIndicator());
+                }),
+              ),
             ),
           ),
         ));

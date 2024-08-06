@@ -47,7 +47,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
 
    resendOtp() {
     startTimer();
-    resetOtpRepo(email: text, context: context).then((value) async {
+    resetOtpRepo(email: text, context: context,type: "pswdotp").then((value) async {
       if (value.success == true) {
         showToast("${value.message}");
         startTimer();

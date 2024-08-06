@@ -9,10 +9,9 @@ import 'package:Safeplate/widget/helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
-Future<CommonModel> resetOtpRepo(
+Future<CommonModel> signupresetOtpRepo(
     {required String email,
-      required String type,
-      required BuildContext context}) async {
+      required BuildContext context, required String type}) async {
   OverlayEntry loader = NewHelper.overlayLoader(context);
   Overlay.of(context).insert(loader);
   var map = <String, dynamic>{};
@@ -28,6 +27,7 @@ Future<CommonModel> resetOtpRepo(
 
     http.Response response = await http.post(Uri.parse(ApiUrl.resetOtpApi),
         body: jsonEncode(map), headers: headers);
+    log("Login Data map${response.body}");
     if (response.statusCode == 200 ||
         response.statusCode == 201 ||
         response.statusCode == 400) {

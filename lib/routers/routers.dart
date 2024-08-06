@@ -23,6 +23,7 @@ import 'package:Safeplate/screen/verifyotp_screen.dart';
 import 'package:get/get.dart';
 
 import '../screen/chat_screen.dart';
+import '../screen/home/singlepost.dart';
 import '../screen/settings/communityandmyposts.dart';
 import '../screen/settings/family_member_edit.dart';
 
@@ -49,6 +50,7 @@ class MyRouter {
     GetPage(name: SacanScreen.route, page: () => const SacanScreen()),
     GetPage(name: BottomNavbar.route, page: () => const BottomNavbar()),
     GetPage(name: ChatScreen.route, page: () =>  const ChatScreen()),
+    GetPage(name: SinglePostScreen.route, page: () =>   SinglePostScreen()),
     // GetPage(name: AllFamilyMember.route, page: () =>   FamilyMemberEdit()),
 
   ];
