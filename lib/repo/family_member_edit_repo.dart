@@ -1,8 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-
-import 'package:Safeplate/model/common_model.dart';
 import 'package:Safeplate/widget/Api_url.dart';
 import 'package:Safeplate/widget/helper.dart';
 import 'package:flutter/cupertino.dart';

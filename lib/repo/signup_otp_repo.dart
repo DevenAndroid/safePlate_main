@@ -17,6 +17,7 @@ Future<SignupOTPModel> signupOTPRepo(
   var map = <String, dynamic>{};
   map['email'] = email;
   map['otp'] = otp;
+  map['type'] = 'pswdotp';
 
   log("Login Data map$map");
   try {

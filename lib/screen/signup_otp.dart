@@ -1,5 +1,8 @@
 import 'dart:async';
+
+
 import 'dart:developer';
+
 
 import 'package:Safeplate/repo/resetotp_repo.dart';
 import 'package:flutter/gestures.dart';
@@ -10,8 +13,6 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-
-import '../repo/sign_up_repo.dart';
 import '../repo/signup_otp_repo.dart';
 import '../repo/signup_resend_otp_repo.dart';
 import '../repo/verify_otp_repo.dart';

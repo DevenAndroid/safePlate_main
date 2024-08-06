@@ -102,7 +102,7 @@ class BMI {
     weight = json['weight'];
     unit = json['Unit'];
     ft = json['ft'];
-    inch = json['Inch'];
+    inch = json['In.'];
     unit2 = json['Unit_2'];
   }
 
@@ -111,7 +111,7 @@ class BMI {
     data['weight'] = this.weight;
     data['Unit'] = this.unit;
     data['ft'] = this.ft;
-    data['Inch'] = this.inch;
+    data['In.'] = this.inch;
     data['Unit_2'] = this.unit2;
     return data;
   }

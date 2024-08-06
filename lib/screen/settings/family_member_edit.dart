@@ -28,6 +28,10 @@ class FamilyMemberEdit extends StatefulWidget {
 }
 
 class _FamilyMemberEditState extends State<FamilyMemberEdit> {
+  String?value='Mother';
+  List<String> familyRelationship=['Mother','Father','Sister','Brother', ];
+
+
   final _formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController phonenumberController = TextEditingController();
@@ -57,6 +61,7 @@ class _FamilyMemberEditState extends State<FamilyMemberEdit> {
       log('No image selected.');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -271,18 +276,50 @@ class _FamilyMemberEditState extends State<FamilyMemberEdit> {
                       const SizedBox(
                         height: 12,
                       ),
-                      EditProfileTextFieldWidget(
-                        hint: "Enter Your Relationship",
-                        controller:relationshipController,
-                        keyboardType: TextInputType.name,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Relationship is required";
-                          } else {
-                            return null;
-                          }
+                      DropdownButtonFormField<String>(
+                        value: value,
+                        icon: const Icon(Icons.keyboard_arrow_down),
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Color(0xffAFAFAF)),
+                              borderRadius:
+                              BorderRadius.circular(10)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Color(0xffAFAFAF)),
+                              borderRadius:
+                              BorderRadius.circular(10)),
+                          disabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Color(0xffAFAFAF)),
+                              borderRadius:
+                              BorderRadius.circular(10)),
+                        ),
+                        items: familyRelationship.map((String item) {
+                          return DropdownMenuItem<String>(
+                            value: item,
+                            child: Text(item),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            value = newValue!;
+                          });
                         },
                       ),
+                      // EditProfileTextFieldWidget(
+                      //   hint: "Enter Your Relationship",
+                      //   controller:relationshipController,
+                      //   keyboardType: TextInputType.name,
+                      //   validator: (value) {
+                      //     if (value!.isEmpty) {
+                      //       return "Relationship is required";
+                      //     } else {
+                      //       return null;
+                      //     }
+                      //   },
+                      // ),
                       const SizedBox(
                         height: 25,
                       ),
@@ -297,13 +334,13 @@ class _FamilyMemberEditState extends State<FamilyMemberEdit> {
                                   email: widget.email.toString(),
                                   phonenumber:phonenumberController.text,
                                   images:_image.toString() ,
-                                  relationship: relationshipController.text,
+                                  relationship:value.toString(), //relationshipController.text,
                                   context: context
 
 
                               ).then((value) {
                                 if (value.success == true) {
-                                  Get.offAll(()=>AllFamilyMember() );
+                                  Get.to(()=>const AllFamilyMember() );
                                   print("data${value.message}");
                                   showToast(value.message);
 

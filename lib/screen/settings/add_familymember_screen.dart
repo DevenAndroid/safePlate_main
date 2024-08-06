@@ -23,21 +23,17 @@ class AddFamilyMember extends StatefulWidget {
 class _AddFamilyMemberState extends State<AddFamilyMember> {
   final _formKey = GlobalKey<FormState>();
 
-  // final nameController = TextEditingController();
-  // final relationsController = TextEditingController();
-  // final emailController = TextEditingController();
-  // final phoneNumberController = TextEditingController();
-  //
   bool showValidation = false;
 
   TextEditingController nameController = TextEditingController();
-  // TextEditingController relationsController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController phonenumberController = TextEditingController();
   TextEditingController relationshipController = TextEditingController();
   bool? _isValue = false;
   final RxStatus status = RxStatus.loading();
-  // TextEditingController confirmController = TextEditingController();
+String?value='Mother';
+  List<String> familyRelationship=['Mother','Father','Sister','Brother', ];
+
 
 
   File? _image;
@@ -162,7 +158,6 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
                                                 crossAxisAlignment: CrossAxisAlignment.center,
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
-                                                  // Icon(Icons.browse_gallery),gallery
                                                   Image.asset("assets/icons/gallery.png",height: 24,width: 24,),
                                                   Text("Gallery",style: GoogleFonts.roboto(
                                                       fontSize: 15,
@@ -233,7 +228,6 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
                            return null;
                          },
 
-                        // controller: nameController.,
                       ),
                       const SizedBox(
                         height: 25,
@@ -299,18 +293,50 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
                       const SizedBox(
                         height: 12,
                       ),
-                      EditProfileTextFieldWidget(
-                        hint: "Enter Your Relationship",
-                        controller:relationshipController,
-                        keyboardType: TextInputType.name,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Relationship is required";
-                          } else {
-                            return null;
-                          }
+                      DropdownButtonFormField<String>(
+                        value: value,
+                        icon: const Icon(Icons.keyboard_arrow_down),
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Color(0xffAFAFAF)),
+                              borderRadius:
+                              BorderRadius.circular(10)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Color(0xffAFAFAF)),
+                              borderRadius:
+                              BorderRadius.circular(10)),
+                          disabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Color(0xffAFAFAF)),
+                              borderRadius:
+                              BorderRadius.circular(10)),
+                        ),
+                        items: familyRelationship.map((String item) {
+                          return DropdownMenuItem<String>(
+                            value: item,
+                            child: Text(item),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                           value = newValue!;
+                          });
                         },
                       ),
+                      // EditProfileTextFieldWidget(
+                      //   hint: "Enter Your Relationship",
+                      //   controller:relationshipController,
+                      //   keyboardType: TextInputType.name,
+                      //   validator: (value) {
+                      //     if (value!.isEmpty) {
+                      //       return "Relationship is required";
+                      //     } else {
+                      //       return null;
+                      //     }
+                      //   },
+                      // ),
                       const SizedBox(
                         height: 25,
                       ),
@@ -325,7 +351,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
                                   email: emailController.text,
                                  phonenumber:phonenumberController.text,
                                   images:_image ?? "" ,
-                                 relationship: relationshipController.text,
+                                 relationship: value,//relationshipController.text,
                                   context: context
 
 

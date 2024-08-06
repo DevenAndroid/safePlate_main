@@ -14,7 +14,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+String? mail;
+
 import '../repo/signup_resend_otp_repo.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -251,6 +255,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             ElevatedButton(
                                 onPressed: () {
+                                  mail=emailController.text;
                                   // if (_formKey1.currentState!.validate()) {
                                   //   login();
                                   // }else{

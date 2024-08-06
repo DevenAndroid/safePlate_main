@@ -1,8 +1,11 @@
+import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pushy_flutter/pushy_flutter.dart';
+import '../model/onbording_model.dart';
+import '../repo/onboarding_repo.dart';
+import '../widget/helper.dart';
 import 'login_screen.dart';
 import 'onboard_data.dart';
 
@@ -18,32 +21,31 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   late PageController _pageController;
   final RxInt _pageIndex = 0.obs;
 
-///                     Token /////////////////////////////////////////////////////////////////////
-  String _deviceToken = 'Loading...';
-  Future<void> initPlatformState() async {
-    Pushy.listen();
-    // Pushy.setAppId('YOUR_APP_ID');
-    Pushy.setAppId('com.safeplate.safeplate');
+  // Rx<RxStatus> statusOfOnBoarding = RxStatus.empty().obs;
+  // Rx<BoardingModel> dataOnBoarding = BoardingModel().obs;
+  // getDataOnBording() {
+  //   onBoardingRepo().then((value) {
+  //     log("response.body..... ${value}");
+  //     dataOnBoarding.value = value;
+  //     if (value.success == true) {
+  //       log("User data: ${dataOnBoarding.value.data.toString()}");
+  //       print('Data success: ${value.message.toString()}');
+  //     } else {
+  //       showToast(value.message);
+  //       print('Data error: ${value.message.toString()}');
+  //       statusOfOnBoarding.value = RxStatus.error();
+  //     }
+  //   }).catchError((error) {
+  //     log("Error: $error");
+  //     showToast("An error occurred");
+  //     statusOfOnBoarding.value = RxStatus.error();
+  //   });
+  // }
 
-    try {
-      String deviceToken = await Pushy.register();
-      print('Device token: $deviceToken');
-      setState(() {
-        _deviceToken = deviceToken;
-      });
-    } catch (error) {
-      print('Error: ${error.toString()}');
-      setState(() {
-        _deviceToken = 'Registration failed';
-      });
-    }
-  }
-
-  ///                     Token /////////////////////////////////////////////////////////////////////
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+   // getDataOnBording();
     _pageController = PageController(initialPage: 0);
 
   }
@@ -70,11 +72,16 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       Scaffold(
         extendBody: false,
         resizeToAvoidBottomInset: false,
-        body: Stack(
+        body:
+
+       // dataOnBoarding.value.success == true ?
+        Stack(
       children: [
         PageView.builder(
             physics: const BouncingScrollPhysics(),
-            itemCount: OnBoardData.length,
+            itemCount:
+            //dataOnBoarding.value.data!.onboarding!.length,
+            OnBoardData.length,
             controller: _pageController,
             pageSnapping: true,
             onPageChanged: (index) {
@@ -85,9 +92,11 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             itemBuilder: (context, index) {
               return Column(children: [
                 Image.asset(
+                 // dataOnBoarding.value.data!.onboarding![index].dataa!.icon.toString(),
                   height: height * .7,
                   width: width,
-                  OnBoardData[index].image.toString(),
+                  // dataOnBoarding.value.data!.onboarding1!.icon.toString(),
+                 OnBoardData[index].image.toString(),
                   fit: BoxFit.cover,
                 ),
               ]);
@@ -121,9 +130,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                                 SizedBox(
                                   width:310,
                                   child: Text(
-                                    OnBoardData[_pageIndex.value]
-                                        .title
-                                        .toString(),
+                                  //  dataOnBoarding.value.data!.onboarding![index].dataa!.headerText.toString(),
+                                    OnBoardData[index].title.toString(),
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.roboto(
                                           fontWeight: FontWeight.w500,
@@ -138,9 +146,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                                 SizedBox(
                                   width:310,
                                   child: Text(
-                                    OnBoardData[_pageIndex.value]
-                                        .description
-                                        .toString(),
+                                    //dataOnBoarding.value.data!.onboarding![index].dataa!.caption.toString(),
+                                    OnBoardData[index].description.toString(),
                                     textAlign: TextAlign.center,
                                     style:  GoogleFonts.roboto(
                                         fontWeight: FontWeight.w400,
@@ -161,7 +168,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             ...List.generate(
-                                OnBoardData.length,
+                               // dataOnBoarding.value.data!.onboarding!.length,
+                                 OnBoardData.length,
                                 (index) => Padding(
                                       padding:
                                           const EdgeInsets.only(right: 10.0),
@@ -239,7 +247,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           ),
         ),
       ],
-    ));
+    )
+// :const SizedBox(child: CircularProgressIndicator(),)
+
+      );
   }
 }
 
