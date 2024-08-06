@@ -62,9 +62,12 @@ class CommonTextFieldWidget extends StatelessWidget {
       minLines: minLines,
       maxLines: maxLines,
       cursorColor: Colors.black,
-        inputFormatters: [
-          FilteringTextInputFormatter.deny(RegExp(r'\s')),
-        ],
+        // inputFormatters: [
+        //   FilteringTextInputFormatter.deny(RegExp(r'\s')),
+        // ],
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(length),
+      ],
       decoration: InputDecoration(
           hintText: hint,
           focusColor: Color(0xff181818),

@@ -8,24 +8,21 @@ class ApiUrl{
   static const signApi = "${baseUrl}register";
   static const forgotMailApi = "${baseUrl}forgotPassword";
   static const verifyOtpApi = "${baseUrl}otpverify";
-  static const resetOtpApi = "${baseUrl}resetpassword";
+  static const resetOtpApi = "${baseUrl}resendotp";
   static const resetPasswordApi = "${baseUrl}resetpassword";
   static const signupOTPApi = "${baseUrl}emailotpverify";
   static const profile = "${baseUrl}profile";
   static const updateProfile = "${baseUrl}updateprofile";
   static const addFamilyMember = "${baseUrl}addmember";
   static const likePost = "${baseUrl}likepost/";
-
   static const getFamilyMember = "${baseUrl}members";
-
-
-
   static const delete = "${baseUrl}removemember?membersemail=";
   static const editFamilyMember = "${baseUrl}updatemember";
-
   static const createCommunity = "${baseUrl}addpost";
   static const getMyPost = "${baseUrl}posts";
   static const getAllPost = "${baseUrl}allposts";
+  static const commentPost = "${baseUrl}addcomment/";
+  static const singlePost = "${baseUrl}posts/";
 
 
 }

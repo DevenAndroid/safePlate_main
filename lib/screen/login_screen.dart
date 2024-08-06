@@ -3,6 +3,7 @@ import 'package:Safeplate/repo/login_repo.dart';
 import 'package:Safeplate/resources/dimension.dart';
 import 'package:Safeplate/screen/BottomNavBar/bottomnavbar.dart';
 import 'package:Safeplate/screen/forgot_screen.dart';
+import 'package:Safeplate/screen/signup_otp.dart';
 import 'package:Safeplate/screen/signup_screen.dart';
 import 'package:Safeplate/widget/custom_textfield.dart';
 import 'package:Safeplate/widget/helper.dart';
@@ -12,6 +13,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../repo/signup_resend_otp_repo.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -28,9 +31,10 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final _formKey1 = GlobalKey<FormState>();
+  String currentMessage = '';
 
-  @override
   void initState() {
+    // TODO: implement initState
     super.initState();
   }
 
@@ -109,6 +113,49 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            SizedBox(
+                              height: 30,
+                            ),
+                            currentMessage == ""
+                                ? SizedBox()
+                                : Center(
+                              child: RichText(
+                                text: TextSpan(
+                                  text: 'You are not verify ? ',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    fontFamily: 'poppinsSans',
+                                    color: Color(0xFF333848),
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            signupresetOtpRepo(
+                                                email: emailController.text,
+                                                type: "emailverifyotp",
+                                                context: context)
+                                                .then((value) async {
+                                              if (value.success == true) {
+                                                showToast(
+                                                    "${value.message}");
+                                                Get.toNamed(
+                                                    SignupOtp.route,arguments: [emailController.text.toString()]);
+                                              } else {
+                                                showToast(value.message);
+                                              }
+                                              return;
+                                            });
+                                          },
+                                        text: 'Resend OTP',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.redAccent)),
+                                  ],
+                                ),
+                              ),
+                            ),
                             SizedBox(
                               height: 30,
                             ),
@@ -229,8 +276,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                             showToast(value.message);
                                             print("tojkenmy =>${value.accessToken.toString()}");
                                             Get.toNamed(BottomNavbar.route,);
-                                          } else {
+                                          }       else if(value.success==false){
+
                                             showToast(value.message);
+                                            if(value.message=="Please verify your email to continue"){
+                                              currentMessage=value.message!;
+                                              setState(() {
+
+                                              });
+                                            }
                                           }
                                         });
                                   }
