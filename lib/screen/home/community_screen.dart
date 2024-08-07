@@ -208,7 +208,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                        padding: const EdgeInsets.only(bottom: 26),
                        child: InkWell(
                          onTap: () {
-                           // Get.toNamed(SinglePostScreen.route,arguments: );
+                           Get.toNamed(SinglePostScreen.route );
                          },
                          child: Container(
                            decoration: BoxDecoration(

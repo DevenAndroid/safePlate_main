@@ -27,11 +27,12 @@ Future<CommonModel> signupresetOtpRepo(
 
     http.Response response = await http.post(Uri.parse(ApiUrl.resetOtpApi),
         body: jsonEncode(map), headers: headers);
-    log("Login Data map${response.body}");
+
     if (response.statusCode == 200 ||
         response.statusCode == 201 ||
         response.statusCode == 400) {
       NewHelper.hideLoader(loader);
+      log("Login Data map${response.body}");
       return CommonModel.fromJson(json.decode(response.body));
     } else if (response.statusCode == 401) {
       NewHelper.hideLoader(loader);

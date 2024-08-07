@@ -411,10 +411,12 @@ class _MyPostScreenState extends State<MyPostScreen> {
                                   padding: const EdgeInsets.only(bottom: 26),
                                   child: InkWell(
                                     onTap: () {
-                                      Get.to(()=>SinglePostScreen(
-                                          id: model.value.post![index].sId.toString(),
-
-                                      ));
+                                      Get.toNamed(SinglePostScreen.route);
+                                      // Get.to(()=>SinglePostScreen(
+                                      //     id: model.value.post![index].sId.toString(),
+                                      //
+                                      // )
+                                      // );
                                       // Get.toNamed(SinglePostScreen.route,arguments: model.value.post![index].sId);
                                     },
                                     child: Container(

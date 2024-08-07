@@ -70,7 +70,7 @@ class _SignupOtpState extends State<SignupOtp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    text = Get.arguments[0];
+    text = Get.arguments;
     print("text${text}");
 
   }
