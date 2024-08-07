@@ -5,6 +5,9 @@ import 'package:get/get.dart';
 import 'package:Safeplate/screen/onboarding_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'BottomNavBar/bottomnavbar.dart';
+import 'login_screen.dart';
+
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -22,11 +25,12 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(seconds: 3), () async {
 
       SharedPreferences pref = await SharedPreferences.getInstance();
-      String? userInfo = pref.getString('user_info');
+      String? userInfo = pref.getString('cookie');
       if (userInfo != null){
-        Get.offAllNamed(HomeScreen.route);
+        Get.offAllNamed(BottomNavbar.route);
 
       } else {
+
         Get.offAllNamed(OnBoardingScreen.route);
       }
 

@@ -13,11 +13,11 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import '../repo/signup_resend_otp_repo.dart';
 
 String? mail;
 
-import '../repo/signup_resend_otp_repo.dart';
+
 
 
 class LoginScreen extends StatefulWidget {
@@ -179,8 +179,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               hint: 'Enter Your Email',
                               controller: emailController,
                               keyboardType: TextInputType.emailAddress,
+                              // inputFormatters: [
+                              //   FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                              // ],
                               validator: (value) {
-                                if (value!.isEmpty) {
+                                if (value!.isEmpty || RegExp(r'\s').hasMatch(value)) {
                                   return "Email is required";
                                 } else {
                                   return null;
