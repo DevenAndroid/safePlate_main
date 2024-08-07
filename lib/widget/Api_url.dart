@@ -39,3 +39,15 @@ Future getAuthHeader() async {
   };
   return gg;
 }
+
+
+Future getRefresh() async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  var hh = {
+    if (pref.getString("refreshToken") != null){
+      'refreshtoken': pref.getString("refreshToken")!.toString(),
+    }
+     // HttpHeaders.authorizationHeader: 'Bearer ${pref.getString("refreshToken")!.toString().replaceAll('\"', '')}',
+  };
+  return hh;
+}

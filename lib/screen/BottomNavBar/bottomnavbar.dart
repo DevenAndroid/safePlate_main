@@ -28,35 +28,40 @@ class _BottomNavbarState extends State<BottomNavbar> {
   Widget build(BuildContext context) {
     final pages = [
       HomeScreen(),
-
       SacanScreen(),
       ProfileScreen(),
     ];
-    return Obx(() {
-      return Stack(
-        children: [
-          Scaffold(
-            body: pages.elementAt(bottomController.pageIndex.value),
-            extendBody: true,
-            // extendBodyBehindAppBar: true,
-            backgroundColor: Colors.white,
-            bottomNavigationBar: buildMyNavBar(context),
-          ),
-          Positioned(
-            bottom: 20.0,
-            left: MediaQuery.of(context).size.width / 2 - 30,
-            child: FloatingActionButton(
-
-
-              onPressed: () {
-                bottomController.updateIndexValue(1);
-              },
-         child: SvgPicture.asset("assets/icons/Container.svg"),
+    return WillPopScope(
+      onWillPop: () async {
+        Get.offAllNamed(BottomNavbar.route);
+        return false;
+      },
+      child: Obx(() {
+        return Stack(
+          children: [
+            Scaffold(
+              body: pages.elementAt(bottomController.pageIndex.value),
+              extendBody: true,
+              // extendBodyBehindAppBar: true,
+              backgroundColor: Colors.white,
+              bottomNavigationBar: buildMyNavBar(context),
             ),
-          ),
-        ],
-      );
-    });
+            Positioned(
+              bottom: 20.0,
+              left: MediaQuery.of(context).size.width / 2 - 30,
+              child: FloatingActionButton(
+
+
+                onPressed: () {
+                  bottomController.updateIndexValue(1);
+                },
+           child: SvgPicture.asset("assets/icons/Container.svg"),
+              ),
+            ),
+          ],
+        );
+      }),
+    );
   }
 
   buildMyNavBar(BuildContext context) {

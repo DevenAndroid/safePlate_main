@@ -223,7 +223,7 @@ class _FamilyMemberEditState extends State<FamilyMemberEdit> {
                         controller: nameController,
                         validator: (value) {
                           if (value!.trim().isEmpty) {
-                            return 'Please Enter Name'.tr;
+                            return 'Name is required'.tr;
                           } else if (value.length >= 30) {
                             return 'Name cannot exceed 30 characters'.tr;
                           }

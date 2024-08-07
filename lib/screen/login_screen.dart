@@ -181,16 +181,25 @@ class _LoginScreenState extends State<LoginScreen> {
                               hint: 'Enter Your Email',
                               controller: emailController,
                               keyboardType: TextInputType.emailAddress,
-                              // inputFormatters: [
-                              //   FilteringTextInputFormatter.deny(RegExp(r'\s')),
-                              // ],
                               validator: (value) {
-                                if (value!.isEmpty || RegExp(r'\s').hasMatch(value)) {
+                                if (value == null || value.isEmpty) {
                                   return "Email is required";
+                                } else if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) {
+                                  return "Enter a valid email address";
                                 } else {
                                   return null;
                                 }
                               },
+                              // inputFormatters: [
+                              //   FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                              // ],
+                              // validator: (value) {
+                              //   if (value!.isEmpty || RegExp(r'\s').hasMatch(value)) {
+                              //     return "Email is required";
+                              //   } else {
+                              //     return null;
+                              //   }
+                              // },
                             ),
                             SizedBox(
                               height: AddSize.size25,
