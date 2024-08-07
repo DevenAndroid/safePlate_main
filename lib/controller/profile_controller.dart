@@ -57,7 +57,7 @@ class ProfileController extends GetxController {
         heathController.text = profile.value.user!.healthConditions ?? "";
 
         statusOfProfile.value = RxStatus.success();
-        showToast(value.message);
+       // showToast(value.message);
         print('Data success: ${value.message.toString()}');
       } else {
         showToast(value.message);
