@@ -1,15 +1,20 @@
 import 'package:Safeplate/screen/Notification_screen.dart';
 import 'package:Safeplate/screen/PrivacySecurity_screen.dart';
 import 'package:Safeplate/screen/home/community_screen.dart';
+import 'package:Safeplate/screen/login_screen.dart';
 import 'package:Safeplate/screen/termscondition_screen.dart';
+import 'package:Safeplate/widget/Api_url.dart';
+import 'package:Safeplate/widget/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:Safeplate/resources/dimension.dart';
-
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../settings/communityandmyposts.dart';
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -213,6 +218,9 @@ class _SettingScreenState extends State<SettingScreen> {
              GestureDetector(
                  behavior: HitTestBehavior.translucent,
                  onTap: () async {
+                   print("logout");
+                   logout();
+                   print("logout");
                  },
                  child: moreData(
                    const Icon(
@@ -265,4 +273,47 @@ class _SettingScreenState extends State<SettingScreen> {
       ),
     );
   }
+
+
+
+  // await getAuthHeader()
+
+  Future<void> logout() async {
+    final url = Uri.parse('https://safegate.webdemozone.com/api/v1/logout');
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    final body = jsonEncode({
+      'refreshtoken': pref.getString("refreshToken")!.toString(),
+    });
+
+    try {
+      final response = await http.post(
+        url,
+          headers: await getAuthHeader(),
+         body: body,
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        String message = responseData['message'];
+        print('Logout successful: $message');
+        // Successfully logged out
+        print('Logout successful');
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        pref.clear();
+        Get.offAllNamed( LoginScreen.route);
+        showToast(message);
+      } else {
+        // Error occurred
+        print('Logout failed: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    } catch (e) {
+      // Exception occurred
+      print('Error: $e');
+    }
+  }
+
+
+
+
 }
