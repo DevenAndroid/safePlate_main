@@ -35,7 +35,7 @@ class ProfileController extends GetxController {
       profile.value = value;
       if (value.success == true) {
         log("User data: ${profile.value.user.toString()}");
-        log("User data: ${profile.value.user!.bMI!.inch.toString()}");
+        //log("User data: ${profile.value.user!.bMI!.inch.toString()}");
          if(profile.value.user!.bMI != null) {
            selectUnit = profile.value.user!.bMI!.unit2 ?? "1";
            selectUnit1 = profile.value.user!.bMI!.unit ?? "1";
