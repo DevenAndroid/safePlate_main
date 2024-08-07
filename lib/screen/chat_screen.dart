@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'login_screen.dart';
 class ChatScreen extends StatefulWidget {
 
     static const route = "/chatScreen";
@@ -30,6 +31,16 @@ class _ChatScreenState extends State<ChatScreen> {
     _userInput.clear();
   }
 
+Datalogin() async{
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  await pref.getString("name")!.toString();
+  print(pref.getString("name")!.toString());
+}
+  @override
+  void initState() {
+    Datalogin();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +66,13 @@ class _ChatScreenState extends State<ChatScreen> {
               const SizedBox(width: 10,),
               Column(crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Shashi Kumar", style: GoogleFonts.roboto(
+                  Text(
+" "
+
+
+                  // name==null? name.toString():"user"
+                    // "Shashi Kumar"
+                    , style: GoogleFonts.roboto(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                       color:Colors.white),),
@@ -74,8 +91,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
                 ],
               ),
-              Spacer(),
-             Icon(Icons.more_vert)
             ],
           ),
         ),

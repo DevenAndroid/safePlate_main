@@ -19,6 +19,7 @@ import '../repo/signup_resend_otp_repo.dart';
 
 
 String? mail;
+String? name;
 
 
 class LoginScreen extends StatefulWidget {
@@ -260,6 +261,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ElevatedButton(
                                 onPressed: () {
                                   mail=emailController.text;
+
                                   // if (_formKey1.currentState!.validate()) {
                                   //   login();
                                   // }else{
@@ -276,8 +278,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                         .then(
                                             (value) async {
                                           if (value.success == true) {
+                                            print("AAAAAAAAAAAAAA${name.toString()}");
+                                            //name=value.data!.name.toString();
                                             SharedPreferences pref = await SharedPreferences.getInstance();
                                             pref.setString("cookie", jsonEncode(value.accessToken));
+                                            pref.setString("email", jsonEncode(value.data!.email));
+                                            pref.setString("name", jsonEncode(value.data!.name));
+                                            pref.setString("refreshToken", jsonEncode(value.refreshtoken));
                                             // pref.setString("user_info", jsonEncode(value.accessToken));
                                             // prefs.setString('token', value.accessToken.toString());
                                             // final prefs = await SharedPreferences.getInstance();
