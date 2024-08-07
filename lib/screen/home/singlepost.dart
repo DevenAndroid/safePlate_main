@@ -131,7 +131,7 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount:3,
                 itemBuilder: (context, index) {
-                return  Obx(() {
+
 
                   return
 
@@ -184,7 +184,7 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                       ),
                     ),
                   );
-                });
+
               },),
                 SizedBox(height: height*0.05,),
 
