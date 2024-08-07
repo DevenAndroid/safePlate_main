@@ -241,13 +241,16 @@ String?value='Mother';
                       const SizedBox(
                         height: 12,
                       ),
+
                        EditProfileTextFieldWidget(
                         hint: "Enter Your Email",
                         controller:emailController,
                          keyboardType: TextInputType.emailAddress,
                          validator: (value) {
-                           if (value!.isEmpty) {
+                           if (value == null || value.isEmpty) {
                              return "Email is required";
+                           } else if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) {
+                             return "Enter a valid email address";
                            } else {
                              return null;
                            }
