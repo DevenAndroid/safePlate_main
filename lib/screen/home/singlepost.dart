@@ -8,13 +8,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import '../../model/single_post_model.dart';
 import '../../repo/single_post_repo.dart';
 import '../../widget/helper.dart';
 
 class SinglePostScreen extends StatefulWidget {
-   String? id;
+  String? id;
    SinglePostScreen({super.key,this.id});
+
 
 
   static var route = "/singlePostScreen";
@@ -24,36 +26,46 @@ class SinglePostScreen extends StatefulWidget {
 
 class _SinglePostScreenState extends State<SinglePostScreen> {
 
-  Rx<RxStatus> statusOfmycomment = RxStatus.empty().obs;
-  Rx<SinglePostModel> model = SinglePostModel().obs;
 
-  void getData() {
-    singlePostRepo(id: widget.id.toString()  ,context: context).then((value) {
-      model.value = value;
+
+
+
+  Rx<SinglePostModel> single = SinglePostModel().obs;
+  Rx<RxStatus> statusOfSingle = RxStatus.empty().obs;
+  singlePost(){
+    singlePostRepo(id:widget.id.toString(), context: context).then((value) {
+      log("response.body.....    ${value}");
+      single.value = value;
       if (value.success == true) {
-        log('Success in getData');
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          statusOfmycomment.value = RxStatus.success();
-        });
+       // timesData();
+        statusOfSingle.value = RxStatus.success();
+        showToast(value.message);
+        print("11111111111111111111111${value.message.toString()}");
+          // Output will be in the desired time format, e.g., "10:21 AM"
+
       } else {
-        log('Error in getData');
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          statusOfmycomment.value = RxStatus.error();
-        });
+        showToast(value.message);
+        print("222222222222222222222222${value.message.toString()}");
+        statusOfSingle.value = RxStatus.error();
       }
-    }).catchError((error) {
-      log('Error in getData(): $error');
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        statusOfmycomment.value = RxStatus.error();
-      });
     });
   }
+
+
+
+
+  String formatTime(String dateTime) {
+    DateTime parsedDate = DateTime.parse(dateTime);
+    DateFormat timeFormat = DateFormat.jm(); // You can use any desired time format here
+    return timeFormat.format(parsedDate);
+  }
+  // dynamic time;
 
 
   TextEditingController  commentController = TextEditingController();
   @override
   void initState() {
-    getData();
+    singlePost();
     super.initState();
   }
   @override
@@ -87,7 +99,9 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 8),
             child: Obx((){
-              return  statusOfmycomment.value.isSuccess? Column(
+              return statusOfSingle.value.isSuccess?
+               // model.value.success == true ?
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -97,7 +111,7 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                       child: Image.asset("assets/images/user.png",height: 50,width: 50,),
                     ),
                     SizedBox(width: width*0.04,),
-                    Text("Welcome Adrian!",style: GoogleFonts.roboto(
+                    Text("Welcome ${single.value.post!.name.toString()} !",style: GoogleFonts.roboto(
                         fontSize: 16, fontWeight: FontWeight.w500, color:Colors.black),),
 
                   ],),
@@ -112,78 +126,177 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                     child: Image.asset("assets/images/order.png",fit: BoxFit.fill,),
                   ),
                   SizedBox(height: height*0.02),
-                  Text("Why did the vegetable go to the doctor? Because it had a bad peeling. "
+                  Text(
+                    single.value.post!.caption.toString()
+                    //"Why did the vegetable go to the doctor? Because it had a bad peeling. "
                     //model.value.post!.name.toString()
                     ,style:
                     GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w500, color:Colors.black),),
                   SizedBox(height: height*0.02),
-                  Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,",
+                  Text(
+              single.value.post!.message.toString(),
+                    //"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,",
                     style: GoogleFonts.roboto(fontSize: 13, fontWeight: FontWeight.w400, color:Colors.black,),
                     textAlign: TextAlign.start,),
 
                   SizedBox(height: height*0.04,),
+                  // Text( single.value.post!.comments!.length.toString()),
                   Text("Comments",style:GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w500, color:Colors.black),),
                   SizedBox(height: height*0.02,),
+                  single.value.post!.comments!.length == 0?
+                  SizedBox(height: 50, width: width,
+                    child:  Text("No Comments Any user"),):
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount:3,
+                    itemCount:   single.value.post!.comments!.length,
                     itemBuilder: (context, index) {
+                      String formattedTime = formatTime(single.value.post!.comments![index].createdAt.toString());
 
-
-                      return
-
-                        Padding(
+                      return Padding(
                           padding: const EdgeInsets.only(bottom: 16),
-                          child: Container(
-                            child: Column(
-                              children: [
-                                Row(
+                          child: Column(
+                            children: [
+                              Container(
+                                // color: Colors.red,
+                                child: Column(
                                   children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image.asset("assets/images/user.png",height:50,width:50,),
+                                    Row(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(10),
+                                          child: Image.asset("assets/images/user.png",height:50,width:50,),
+                                        ),
+                                        SizedBox(width: width*0.03),
+                                        Text( single.value.post!.comments![index].name.toString(),                                      //"Alex smith",
+                                          style: GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w400, color:Colors.black,),),
+                                        const Spacer(),
+                                        Text(
+                      formattedTime,
+                                          //single.value.post!.comments![index].createdAt.toString(),
+                                          //"12min",
+                                          style: GoogleFonts.roboto(fontSize: 12, fontWeight: FontWeight.w300, color:Colors.black,),)
+                                      ],
                                     ),
-                                    SizedBox(width: width*0.03),
-                                    Text("Alex smith",
-                                      style: GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w400, color:Colors.black,),),
-                                    const Spacer(),
-                                    Text("12min",
-                                      style: GoogleFonts.roboto(fontSize: 12, fontWeight: FontWeight.w300, color:Colors.black,),)
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 60,right: 10),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            single.value.post!.comments![index].message.toString(),
+                                            //"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,",
+                                            style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w300, color:Color(0xff545454),),),
+                                          SizedBox(height: height*0.01),
+                                          Align(
+                                            alignment: Alignment.topLeft,
+                                            child: InkWell(
+                                                onTap: (){},
+                                                child: Text("Reply",
+                                                  style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w400, color:Colors.black),)),
+                                          )
+                                          // Row(
+                                          //   children: [
+                                          //     InkWell(
+                                          //         onTap: (){},
+                                          //         child: Text("Like" ,
+                                          //           style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w400, color:Colors.black),)),
+                                          //     SizedBox(width: width*0.06),
+                                          //     InkWell(
+                                          //         onTap: (){},
+                                          //         child: Text("Reply",
+                                          //           style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w400, color:Colors.black),))
+                                          //   ],
+                                          // )
+                                        ],
+                                      ),
+                                    ),
+
                                   ],
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 60,right: 10),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,",
-                                        style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w300, color:Color(0xff545454),),),
-                                      SizedBox(height: height*0.01),
-                                      Row(
-                                        children: [
-                                          InkWell(
-                                              onTap: (){},
-                                              child: Text("Like" ,
-                                                style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w400, color:Colors.black),)),
-                                          SizedBox(width: width*0.06),
-                                          InkWell(
-                                              onTap: (){},
-                                              child: Text("Reply",
-                                                style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w400, color:Colors.black),))
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
+                              ),
+                             SizedBox(height: Get.height*0.01),
+                             ListView.builder(
+                               shrinkWrap: true,
+                               itemCount: 1,// single.value.post!.comments![index].replies!.length,
+                               itemBuilder: (context, index) {
+                                 String formattedTime2 = formatTime( single.value.post!.comments![index].replies![0].createdAt.toString(),);
 
-                              ],
-                            ),
+                             //   time = single.value.post!.comments![index].replies![index].createdAt;
+                               return  Padding(
+                                 padding: const EdgeInsets.only(left:30),
+                                 child: Container(
+                                   // color: Colors.blue,
+                                   child: Column(
+                                     children: [
+                                       Row(
+                                         children: [
+                                           ClipRRect(
+                                             borderRadius: BorderRadius.circular(10),
+                                             child: Image.asset("assets/images/user.png",height:40,width:40),
+                                           ),
+                                           SizedBox(width: width*0.03),
+                                           Text(single.value.post!.comments![index].replies![0].name.toString(),                                      //"Alex smith",
+                                             style: GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w400, color:Colors.black,),),
+                                           const Spacer(),
+                                           Text(
+                                             formattedTime2,
+                                            // single.value.post!.comments![index].replies![index].createdAt.toString(),
+                                             //single.value.post!.comments![index].createdAt.toString(),
+                                             //"12min",
+                                             style: GoogleFonts.roboto(fontSize: 12, fontWeight: FontWeight.w300, color:Colors.black,),)
+                                         ],
+                                       ),
+                                       Padding(
+                                         padding: const EdgeInsets.only(left: 60,right: 10),
+                                         child: Column(
+                                           crossAxisAlignment: CrossAxisAlignment.start,
+                                           mainAxisAlignment: MainAxisAlignment.start,
+                                           children: [
+                                             Text(
+                                            single.value.post!.comments![index].replies![0].message.toString(),
+                                             //  single.value.post!.comments![index].message.toString(),
+                                               //"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,",
+                                               style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w300, color:Color(0xff545454),),),
+                                             SizedBox(height: height*0.01),
+                                             Align(
+                                               alignment: Alignment.topLeft,
+                                               child: InkWell(
+                                                   onTap: (){},
+                                                   child: Text("Reply",
+                                                     style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w400, color:Colors.black),)),
+                                             )
+                                             // Row(
+                                             //   children: [
+                                             //     // InkWell(
+                                             //     //     onTap: (){},
+                                             //     //     child: Text("Like" ,
+                                             //     //       style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w400, color:Colors.black),)),
+                                             //     // SizedBox(width: width*0.06),
+                                             //     InkWell(
+                                             //         onTap: (){},
+                                             //         child: Text("Reply",
+                                             //           style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w400, color:Colors.black),))
+                                             //   ],
+                                             // )
+                                           ],
+                                         ),
+                                       ),
+
+                                     ],
+                                   ),
+
+                                 ),
+                               );
+                             },)
+                            ],
                           ),
                         );
 
-                    },),
+                    },)
+                  ,
+
                   SizedBox(height: height*0.05,),
 
                   Container(
@@ -246,6 +359,7 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                   SizedBox(height: height*0.05,),
                 ],
               )
+
               : const Center(child: CircularProgressIndicator());
             })
           ),
