@@ -6,8 +6,7 @@ import '../model/profile_model.dart';
 import '../repo/profiler_repo.dart';
 
 class ProfileController extends GetxController {
-
- // Rx<TextEditingController> nameController = TextEditingController().obs;
+  RxBool isLoading = false.obs;
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -24,6 +23,7 @@ class ProfileController extends GetxController {
   final unitItems1 = ['1',"2" ,"3","4",'5',"6" ,"8","9","7",'10','11','12','13','14','15'];
   dynamic selectUnit1="1";
   dynamic selectUnit="1";
+
 
   final selectGender = ['male', 'female'];
   dynamic chooseGender;

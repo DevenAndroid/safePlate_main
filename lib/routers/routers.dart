@@ -47,9 +47,9 @@ class MyRouter {
     GetPage(name: NotificationScreen.route, page: () => const NotificationScreen()),
     GetPage(name: ProfileScreen.route, page: () => const ProfileScreen()),
     GetPage(name: AddFamilyMember.route, page: () => const AddFamilyMember()),
-    GetPage(name: SacanScreen.route, page: () => const SacanScreen()),
+    GetPage(name: SacanScreen.route, page: () =>  SacanScreen()),
     GetPage(name: BottomNavbar.route, page: () => const BottomNavbar()),
-    GetPage(name: ChatScreen.route, page: () =>  const ChatScreen()),
+    GetPage(name: ChatScreen.route, page: () =>   ChatScreen()),
     GetPage(name: SinglePostScreen.route, page: () =>   SinglePostScreen()),
     // GetPage(name: AllFamilyMember.route, page: () =>   FamilyMemberEdit()),
 

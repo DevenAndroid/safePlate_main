@@ -1,13 +1,23 @@
+import 'package:Safeplate/screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../controller/profile_controller.dart';
 
 class ChatScreen extends StatefulWidget {
+
   static const route = "/chatScreen";
-  const ChatScreen({super.key});
+  String?name;
+  String?health;
+  String?age;
+  String?weight;
+  String?Gender;
+
+   ChatScreen({super.key,this.name,this.age,this.health,this.weight,this.Gender});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -18,7 +28,10 @@ class _ChatScreenState extends State<ChatScreen> {
   static const apiKey = "AIzaSyCiDGfFN-tCfYrF52weQZ0Lbv8_UcmNbA4";
   final model = GenerativeModel(model: 'gemini-pro', apiKey: apiKey);
   final List<Message> _messages = [];
-  String? _userName = "User";
+  String? _userName;
+
+
+  final profileController = Get.put(ProfileController());
 
   Future<void> sendMessage({String? message}) async {
     final userMessage = message ?? _userInput.text;
@@ -35,21 +48,52 @@ class _ChatScreenState extends State<ChatScreen> {
         final response = await model.generateContent(content);
 
         setState(() {
-          _messages.add(Message(isUser: false, message: response.text ?? "Sorry, I didn't get that.", date: DateTime.now()));
+          _messages.add(Message(
+              isUser: false,
+              message: response.text ?? "Sorry, I didn't get that.",
+              date: DateTime.now()));
         });
       } catch (e) {
         setState(() {
-          _messages.add(Message(isUser: false, message: "Error: ${e.toString()}", date: DateTime.now()));
+          _messages.add(Message(
+              isUser: false,
+              message: "Error: ${e.toString()}",
+              date: DateTime.now()));
         });
       }
     }
   }
+  Future<void> dataLogin() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      _userName = pref.getString("name")?.replaceAll('""', '') ?? "User";
+    });
+  }
+
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      sendMessage(message: "Hello, how can I help you today?");
+    dataLogin();
+    print("object${widget.name.toString()}");
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await profileController.getProfile();
+      if (profileController.profile.value.user != null) {
+
+        print("object>>>>>");
+        sendMessage(
+            message:
+            "My name: ${widget.name.toString()},\n "
+                "My age: ${widget.age.toString()},\n "
+                "My Health issue: ${widget.health.toString()}, "
+                "My weight: ${widget.weight.toString()},\n "
+
+                "My Gender: ${widget.Gender.toString()}\n"
+        );
+      }
+      else{
+        print("object");
+      }
     });
   }
 

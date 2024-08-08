@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../controller/profile_controller.dart';
+
 class BottomNavbar extends StatefulWidget {
   const BottomNavbar({super.key});
   static var route = "/bottonNavBar";
@@ -16,21 +19,35 @@ class BottomNavbar extends StatefulWidget {
 
 class _BottomNavbarState extends State<BottomNavbar> {
   final bottomController = Get.put(BottomNavBarController());
+  final profileController = Get.put(ProfileController());
 
   @override
   void initState() {
     super.initState();
-
+    profileController.getProfile();
+    print("date>>>>>>>>${profileController.ageController.text.toString()}");
     // locationUpdate();
   }
 
   @override
   Widget build(BuildContext context) {
     final pages = [
-      HomeScreen(),
-      SacanScreen(),
-      ProfileScreen(),
+      const HomeScreen(),
+      Obx(() {
+        if (profileController.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return SacanScreen(
+            name: profileController.nameController.text.toString(),
+            health: profileController.heathController.text.toString(),
+            age: profileController.ageController.text.toString(),
+            weight: profileController.weightController.text.toString(),
+          );
+        }
+      }),
+      const ProfileScreen(),
     ];
+
     return WillPopScope(
       onWillPop: () async {
         Get.offAllNamed(BottomNavbar.route);
@@ -42,7 +59,6 @@ class _BottomNavbarState extends State<BottomNavbar> {
             Scaffold(
               body: pages.elementAt(bottomController.pageIndex.value),
               extendBody: true,
-              // extendBodyBehindAppBar: true,
               backgroundColor: Colors.white,
               bottomNavigationBar: buildMyNavBar(context),
             ),
@@ -50,12 +66,10 @@ class _BottomNavbarState extends State<BottomNavbar> {
               bottom: 20.0,
               left: MediaQuery.of(context).size.width / 2 - 30,
               child: FloatingActionButton(
-
-
                 onPressed: () {
                   bottomController.updateIndexValue(1);
                 },
-           child: SvgPicture.asset("assets/icons/Container.svg"),
+                child: SvgPicture.asset("assets/icons/Container.svg"),
               ),
             ),
           ],
@@ -71,20 +85,19 @@ class _BottomNavbarState extends State<BottomNavbar> {
         Container(
           height: 65,
           width: double.maxFinite,
-          decoration:  BoxDecoration(
-            borderRadius:  BorderRadius.vertical(top: Radius.circular(24.0)),
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Color(0xffC5DCBC).withOpacity(.52),
-                offset: Offset(0.0, 1.0), //(x,y)
+                color: const Color(0xffC5DCBC).withOpacity(.52),
+                offset: const Offset(0.0, 1.0), //(x,y)
                 blurRadius: 6.0,
               ),
             ],
-
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
             child: Column(
               children: [
                 Row(
@@ -97,36 +110,27 @@ class _BottomNavbarState extends State<BottomNavbar> {
                         },
                         child: Column(
                           children: [
-                            const SizedBox(
-                              height: 8,
-                            ),
+                            const SizedBox(height: 8),
                             bottomController.pageIndex.value == 0
                                 ? Image.asset(
                               "assets/icons/home.png",
-                              color: Color(0xff75D051),
+                              color: const Color(0xff75D051),
                             )
                                 : Image.asset(
                               "assets/icons/home.png",
-                              color: Color(0xff484C52),
+                              color: const Color(0xff484C52),
                             ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            bottomController.pageIndex.value == 0
-                                ?  Text(
+                            const SizedBox(height: 5),
+                            Text(
                               "Home",
                               style: GoogleFonts.roboto(
-                                  color: Color(0xff75D051),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12),
-                            )
-                                :  Text(
-                              "Home",
-                              style: GoogleFonts.roboto(
-                                  color: Color(0xff484C52),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12),
-                            )
+                                color: bottomController.pageIndex.value == 0
+                                    ? const Color(0xff75D051)
+                                    : const Color(0xff484C52),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -138,36 +142,27 @@ class _BottomNavbarState extends State<BottomNavbar> {
                         },
                         child: Column(
                           children: [
-                            const SizedBox(
-                              height: 8,
-                            ),
+                            const SizedBox(height: 8),
                             bottomController.pageIndex.value == 2
                                 ? Image.asset(
-                           "assets/icons/user.png",
-                              color: Color(0xff75D051),
+                              "assets/icons/user.png",
+                              color: const Color(0xff75D051),
                             )
                                 : Image.asset(
                               "assets/icons/user.png",
-                              color: Color(0xff484C52),
+                              color: const Color(0xff484C52),
                             ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            bottomController.pageIndex.value == 2
-                                ?  Text(
+                            const SizedBox(height: 5),
+                            Text(
                               "Profile",
                               style: GoogleFonts.roboto(
-                                  color: Color(0xff75D051),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12),
-                            )
-                                :  Text(
-                              "Profile",
-                              style: GoogleFonts.roboto(
-                                  color: Color(0xff484C52),
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 12),
-                            )
+                                color: bottomController.pageIndex.value == 2
+                                    ? const Color(0xff75D051)
+                                    : const Color(0xff484C52),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                              ),
+                            ),
                           ],
                         ),
                       ),
