@@ -4,8 +4,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'login_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   static const route = "/chatScreen";
@@ -20,21 +18,16 @@ class _ChatScreenState extends State<ChatScreen> {
   static const apiKey = "AIzaSyCiDGfFN-tCfYrF52weQZ0Lbv8_UcmNbA4";
   final model = GenerativeModel(model: 'gemini-pro', apiKey: apiKey);
   final List<Message> _messages = [];
-  String? _userName;
+  String? _userName = "User";
 
   Future<void> sendMessage({String? message}) async {
-    if (message != null) {
-      setState(() {
-        _messages.add(Message(isUser: true, message: message, date: DateTime.now()));
-      });
-    }
+    final userMessage = message ?? _userInput.text;
 
-    final userMessage = _userInput.text;
     if (userMessage.isNotEmpty) {
       setState(() {
         _messages.add(Message(isUser: true, message: userMessage, date: DateTime.now()));
       });
-      _userInput.clear();
+      if (message == null) _userInput.clear();
 
       try {
         // Process AI response
@@ -52,20 +45,12 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Future<void> Datalogin() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    setState(() {
-      _userName = pref.getString("name");
-    });
-    if (_userName != null) {
-      await sendMessage(message: "Hello, I'm $_userName! How can I assist you today?");
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    Datalogin();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      sendMessage(message: "Hello, how can I help you today?");
+    });
   }
 
   @override
@@ -76,7 +61,7 @@ class _ChatScreenState extends State<ChatScreen> {
         elevation: 0,
         titleSpacing: 0,
         automaticallyImplyLeading: false,
-        backgroundColor: Color(0xff75D051),
+        backgroundColor: const Color(0xff75D051),
         title: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Row(
@@ -145,7 +130,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 Expanded(
                   flex: 15,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.green, width: 2),
                       borderRadius: BorderRadius.circular(4.0),
@@ -160,14 +145,14 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 IconButton(
-                  padding: EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(12),
                   iconSize: 30,
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.black),
                     foregroundColor: MaterialStateProperty.all(Colors.white),
-                    shape: MaterialStateProperty.all(CircleBorder()),
+                    shape: MaterialStateProperty.all(const CircleBorder()),
                   ),
                   onPressed: () {
                     sendMessage();
@@ -211,24 +196,24 @@ class Messages extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(15),
-      margin: EdgeInsets.symmetric(vertical: 15).copyWith(
+      padding: const EdgeInsets.all(15),
+      margin: const EdgeInsets.symmetric(vertical: 15).copyWith(
         left: isUser ? 100 : 10,
         right: isUser ? 10 : 100,
       ),
       decoration: BoxDecoration(
-        color: isUser ? Color(0xff75D051) : Colors.white,
+        color: isUser ? const Color(0xff75D051) : Colors.white,
         borderRadius: BorderRadius.only(
-          topLeft: isUser ? Radius.circular(10) : Radius.zero,
-          bottomLeft: Radius.circular(10),
-          topRight: Radius.circular(10),
-          bottomRight: isUser ? Radius.zero : Radius.circular(10),
+          topLeft: isUser ? const Radius.circular(10) : Radius.zero,
+          bottomLeft: const Radius.circular(10),
+          topRight: const Radius.circular(10),
+          bottomRight: isUser ? Radius.zero : const Radius.circular(10),
         ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
             blurRadius: 5.0,
-            offset: Offset(0.0, 3.0),
+            offset: const Offset(0.0, 3.0),
           ),
         ],
       ),
