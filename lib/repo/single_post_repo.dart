@@ -9,12 +9,13 @@ import '../widget/Api_url.dart';
 import '../widget/helper.dart';
 
 Future<SinglePostModel> singlePostRepo(
-    {required BuildContext context}) async {
+    {required BuildContext context, required String id}) async {
   OverlayEntry loader = NewHelper.overlayLoader(context);
   Overlay.of(context).insert(loader);
   try {
+   String urls=ApiUrl.singlePost;
     final response = await http.get(
-      Uri.parse( ApiUrl.singlePost),
+      Uri.parse("$urls$id" ),
       headers: await getAuthHeader(),
     );
     log("response....    ${response.body}");

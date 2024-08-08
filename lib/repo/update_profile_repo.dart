@@ -28,21 +28,26 @@ Future<UpdateProfileModel> updateProfileRepo(
   ages = int.parse(age).toInt();
 
   var map = <String, dynamic>{};
-  var bmi = <String, dynamic>{};
-  map["name"]=name;
-  map["email"]=email;
-  map["phonenumber"]=phoneNumber;
-  map["postcode"]=postcode;
-  map["aboutme"]=aboutme;
+  // var bmi = <String, dynamic>{};
+  map["name"]=name.toString();
+  map["email"]=email.toString();
+  map["phonenumber"]=phoneNumber.toString();
+  map["postcode"]=postcode.toString();
+  map["aboutme"]=aboutme.toString();
   map["Age"]=ages;
-  map["gender"]=gender;
-  map["health_conditions"]=health;
-  map["BMI"]=bmi;
-  bmi["weight"]=weight;
-  bmi["Unit"]=unit;
-  bmi["ft"]=ft;
-  bmi["In."]=ini;
-  bmi["Unit_2"]=unit2;
+  map["gender"]=gender.toString();
+  map["health_conditions"]=health.toString();
+  map["weight"]=weight.toString();
+  map["Unit"]=unit.toString();
+  map["ft"]=ft.toString();
+  map["In"]=ini.toString();
+  map["Unit2"]=unit2.toString();
+  // map["BMI"]=bmi;
+  // bmi["weight"]=weight;
+  // bmi["Unit"]=unit;
+  // bmi["ft"]=ft;
+  // bmi["In."]=ini;
+  // bmi["Unit_2"]=unit2;
 
   // final body = jsonEncode({
   //   'name': name,//'ankur',
@@ -93,29 +98,3 @@ Future<UpdateProfileModel> updateProfileRepo(
   }
 }
 
-
-/*
-
-Future<UpdateProfileModel> updateProfileRepo() async {
-  try {
-    http.Response response = await http.post(
-
-      Uri.parse(ApiUrl.profile),
-      headers: await getAuthHeader(),
-    );
-
-    if (response.statusCode == 200) {
-      print(jsonDecode(response.body));
-      return UpdateProfileModel.fromJson(jsonDecode(response.body));
-    } else {
-      print(jsonDecode(response.body));
-      return UpdateProfileModel(
-          message: jsonDecode(response.body)["message"],
-          success: false,
-          user: null);
-    }
-  } catch (e) {
-    return UpdateProfileModel(message: e.toString(), success: false, user: null);
-  }
-}
- */

@@ -28,7 +28,7 @@ class MyPostCommunity {
 }
 
 class Post {
-  String? sId;
+  dynamic sId;
   String? userId;
   String? name;
   String? caption;

@@ -1,6 +1,6 @@
 class ProfileModel {
   User? user;
-  dynamic message;
+  String? message;
   bool? success;
 
   ProfileModel({this.user, this.message, this.success});
@@ -23,19 +23,23 @@ class ProfileModel {
 }
 
 class User {
-  dynamic sId;
-  dynamic name;
-  dynamic email;
-  dynamic phonenumber;
+  String? sId;
+  String? name;
+  String? email;
+  String? phonenumber;
   bool? disabled;
-  dynamic roles;
-  dynamic postcode;
-  dynamic aboutme;
-  BMI? bMI;
-  dynamic age;
-  dynamic gender;
-  dynamic healthConditions;
+  String? roles;
+  String? postcode;
+  String? aboutme;
+  int? age;
+  String? gender;
+  String? healthConditions;
   bool? isapproved;
+  String? weight;
+  String? unit;
+  String? ft;
+  String? inch;
+  String? unit2;
 
   User(
       {this.sId,
@@ -46,11 +50,16 @@ class User {
         this.roles,
         this.postcode,
         this.aboutme,
-        this.bMI,
         this.age,
         this.gender,
         this.healthConditions,
-        this.isapproved});
+        this.isapproved,
+        this.weight,
+        this.unit,
+        this.ft,
+        this.inch,
+        this.unit2,
+      });
 
   User.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -61,11 +70,15 @@ class User {
     roles = json['roles'];
     postcode = json['postcode'];
     aboutme = json['aboutme'];
-    bMI = json['BMI'] != null ? new BMI.fromJson(json['BMI']) : null;
     age = json['age'];
     gender = json['gender'];
     healthConditions = json['health_conditions'];
     isapproved = json['isapproved'];
+    weight = json['weight'];
+    unit = json['Unit'];
+    ft = json['ft'];
+    inch = json['In'];
+    unit2 = json['Unit2'];
   }
 
   Map<String, dynamic> toJson() {
@@ -78,41 +91,15 @@ class User {
     data['roles'] = this.roles;
     data['postcode'] = this.postcode;
     data['aboutme'] = this.aboutme;
-    if (this.bMI != null) {
-      data['BMI'] = this.bMI!.toJson();
-    }
     data['age'] = this.age;
     data['gender'] = this.gender;
     data['health_conditions'] = this.healthConditions;
     data['isapproved'] = this.isapproved;
-    return data;
-  }
-}
-
-class BMI {
-  dynamic weight;
-  dynamic unit;
-  dynamic ft;
-  dynamic inch;
-  dynamic unit2;
-
-  BMI({this.weight, this.unit, this.ft, this.inch, this.unit2});
-
-  BMI.fromJson(Map<String, dynamic> json) {
-    weight = json['weight'];
-    unit = json['Unit'];
-    ft = json['ft'];
-    inch = json['In.'];
-    unit2 = json['Unit_2'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['weight'] = this.weight;
     data['Unit'] = this.unit;
     data['ft'] = this.ft;
-    data['In.'] = this.inch;
-    data['Unit_2'] = this.unit2;
+    data['In'] = this.inch;
+    data['Unit2'] = this.unit2;
     return data;
   }
 }
