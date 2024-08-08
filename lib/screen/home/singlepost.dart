@@ -325,7 +325,7 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                                     )
 
                                 ),
-                              ),
+                              ),//trtyryufyuft
                             ),
                           ),
                         ),
