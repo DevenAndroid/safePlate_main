@@ -32,7 +32,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
   final _formkey = GlobalKey<FormState>();
 
   Rx<RxStatus> statusOfmypost = RxStatus.empty().obs;
-  Rx<MyPostCommunity> model = MyPostCommunity().obs;
+   Rx<MyPostCommunity> model = MyPostCommunity().obs;
   Rx<RxStatus> statusOfmylike = RxStatus.empty().obs;
   Rx<LikePostModel> Likemodel = LikePostModel().obs;
 
@@ -411,8 +411,10 @@ class _MyPostScreenState extends State<MyPostScreen> {
                                   padding: const EdgeInsets.only(bottom: 26),
                                   child: InkWell(
                                     onTap: () {
-                                      Get.toNamed(SinglePostScreen.route,
-                                           id: model.value.post![index].sId );
+                                    //  dynamic data = 66b45f8609648d3493847258 ;
+                                      print("IDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD${model.value.post![index].sId.toString()}");
+                                      // Get.toNamed(SinglePostScreen.route, id: model.value.post![index].sId,);
+                                     Get.to(SinglePostScreen(id:model.value.post![index].sId.toString(),));
                                       // Get.to(()=>SinglePostScreen(
                                       //     id: model.value.post![index].sId.toString(),
                                       //

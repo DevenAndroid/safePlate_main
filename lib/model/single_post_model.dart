@@ -1,4 +1,3 @@
-
 class SinglePostModel {
   Post? post;
   String? message;
@@ -30,7 +29,7 @@ class Post {
   String? caption;
   String? message;
   int? likeCount;
-  List<Null>? likes;
+  List<Likes>? likes;
   List<Comments>? comments;
   String? createdAt;
   String? updatedAt;
@@ -56,12 +55,12 @@ class Post {
     caption = json['caption'];
     message = json['message'];
     likeCount = json['likeCount'];
-    // if (json['likes'] != null) {
-    //   likes = <Null>[];
-    //   json['likes'].forEach((v) {
-    //     likes!.add(new Null.fromJson(v));
-    //   });
-    // }
+    if (json['likes'] != null) {
+      likes = <Likes>[];
+      json['likes'].forEach((v) {
+        likes!.add(new Likes.fromJson(v));
+      });
+    }
     if (json['comments'] != null) {
       comments = <Comments>[];
       json['comments'].forEach((v) {
@@ -81,9 +80,9 @@ class Post {
     data['caption'] = this.caption;
     data['message'] = this.message;
     data['likeCount'] = this.likeCount;
-    // if (this.likes != null) {
-    //   data['likes'] = this.likes!.map((v) => v.toJson()).toList();
-    // }
+    if (this.likes != null) {
+      data['likes'] = this.likes!.map((v) => v.toJson()).toList();
+    }
     if (this.comments != null) {
       data['comments'] = this.comments!.map((v) => v.toJson()).toList();
     }
@@ -94,13 +93,32 @@ class Post {
   }
 }
 
+class Likes {
+  String? userId;
+  String? sId;
+
+  Likes({this.userId, this.sId});
+
+  Likes.fromJson(Map<String, dynamic> json) {
+    userId = json['userId'];
+    sId = json['_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['userId'] = this.userId;
+    data['_id'] = this.sId;
+    return data;
+  }
+}
+
 class Comments {
   String? userId;
   String? name;
   String? message;
-  List<Null>? likes;
+  List<Likes>? likes;
   int? likeCount;
-  List<Null>? replies;
+  List<Replies>? replies;
   String? sId;
   String? createdAt;
   String? updatedAt;
@@ -120,19 +138,19 @@ class Comments {
     userId = json['userId'];
     name = json['name'];
     message = json['message'];
-    // if (json['likes'] != null) {
-    //   likes = <Null>[];
-    //   json['likes'].forEach((v) {
-    //     likes!.add(new Null.fromJson(v));
-    //   });
-    // }
+    if (json['likes'] != null) {
+      likes = <Likes>[];
+      json['likes'].forEach((v) {
+        likes!.add(new Likes.fromJson(v));
+      });
+    }
     likeCount = json['likeCount'];
-    // if (json['replies'] != null) {
-    //   replies = <Null>[];
-    //   json['replies'].forEach((v) {
-    //     replies!.add(new Null.fromJson(v));
-    //   });
-    // }
+    if (json['replies'] != null) {
+      replies = <Replies>[];
+      json['replies'].forEach((v) {
+        replies!.add(new Replies.fromJson(v));
+      });
+    }
     sId = json['_id'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
@@ -143,13 +161,65 @@ class Comments {
     data['userId'] = this.userId;
     data['name'] = this.name;
     data['message'] = this.message;
-    // if (this.likes != null) {
-    //   data['likes'] = this.likes!.map((v) => v.toJson()).toList();
-    // }
+    if (this.likes != null) {
+      data['likes'] = this.likes!.map((v) => v.toJson()).toList();
+    }
     data['likeCount'] = this.likeCount;
-    // if (this.replies != null) {
-    //   data['replies'] = this.replies!.map((v) => v.toJson()).toList();
-    // }
+    if (this.replies != null) {
+      data['replies'] = this.replies!.map((v) => v.toJson()).toList();
+    }
+    data['_id'] = this.sId;
+    data['createdAt'] = this.createdAt;
+    data['updatedAt'] = this.updatedAt;
+    return data;
+  }
+}
+
+class Replies {
+  String? userId;
+  String? name;
+  String? message;
+  List<Likes>? likes;
+  int? likeCount;
+  String? sId;
+  String? createdAt;
+  String? updatedAt;
+
+  Replies(
+      {this.userId,
+        this.name,
+        this.message,
+        this.likes,
+        this.likeCount,
+        this.sId,
+        this.createdAt,
+        this.updatedAt});
+
+  Replies.fromJson(Map<String, dynamic> json) {
+    userId = json['userId'];
+    name = json['name'];
+    message = json['message'];
+    if (json['likes'] != null) {
+      likes = <Likes>[];
+      json['likes'].forEach((v) {
+        likes!.add(new Likes.fromJson(v));
+      });
+    }
+    likeCount = json['likeCount'];
+    sId = json['_id'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['userId'] = this.userId;
+    data['name'] = this.name;
+    data['message'] = this.message;
+    if (this.likes != null) {
+      data['likes'] = this.likes!.map((v) => v.toJson()).toList();
+    }
+    data['likeCount'] = this.likeCount;
     data['_id'] = this.sId;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
