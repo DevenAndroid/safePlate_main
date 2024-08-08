@@ -31,75 +31,57 @@ class User {
   String? roles;
   String? postcode;
   String? aboutme;
-  BMI? bMI;
   int? age;
-  List<String>? allergies;
+  String? gender;
   String? healthConditions;
   bool? isapproved;
+  String? weight;
+  String? unit;
+  String? ft;
+  String? inch;
+  String? unit2;
 
-  User({this.sId, this.name, this.email, this.phonenumber, this.disabled, this.roles, this.postcode, this.aboutme, this.bMI, this.age, this.allergies, this.healthConditions, this.isapproved});
+  User({this.sId, this.name, this.email, this.phonenumber, this.disabled, this.roles, this.postcode, this.aboutme, this.age, this.gender, this.healthConditions, this.isapproved, this.weight, this.unit, this.ft, this.inch, this.unit2});
 
-  User.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
-    email = json['email'];
-    phonenumber = json['phonenumber'];
-    disabled = json['disabled'];
-    roles = json['roles'];
-    postcode = json['postcode'];
-    aboutme = json['aboutme'];
-    bMI = json['BMI'] != null ? new BMI.fromJson(json['BMI']) : null;
-    age = json['age'];
-    allergies = json['allergies'].cast<String>();
-    healthConditions = json['health_conditions'];
-    isapproved = json['isapproved'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['name'] = this.name;
-    data['email'] = this.email;
-    data['phonenumber'] = this.phonenumber;
-    data['disabled'] = this.disabled;
-    data['roles'] = this.roles;
-    data['postcode'] = this.postcode;
-    data['aboutme'] = this.aboutme;
-    if (this.bMI != null) {
-      data['BMI'] = this.bMI!.toJson();
-    }
-    data['age'] = this.age;
-    data['allergies'] = this.allergies;
-    data['health_conditions'] = this.healthConditions;
-    data['isapproved'] = this.isapproved;
-    return data;
-  }
+User.fromJson(Map<String, dynamic> json) {
+sId = json['_id'];
+name = json['name'];
+email = json['email'];
+phonenumber = json['phonenumber'];
+disabled = json['disabled'];
+roles = json['roles'];
+postcode = json['postcode'];
+aboutme = json['aboutme'];
+age = json['age'];
+gender = json['gender'];
+healthConditions = json['health_conditions'];
+isapproved = json['isapproved'];
+weight = json['weight'];
+unit = json['Unit'];
+ft = json['ft'];
+inch = json['In'];
+unit2 = json['Unit2'];
 }
 
-class BMI {
-  dynamic weight;
-  dynamic unit;
-  dynamic ft;
-  String? In;
-  dynamic unit2;
-
-  BMI({this.weight, this.unit, this.ft, this.In, this.unit2});
-
-  BMI.fromJson(Map<String, dynamic> json) {
-    weight = json['weight'];
-    unit = json['Unit'];
-    ft = json['ft'];
-    In = json['In.'];
-    unit2 = json['Unit_2'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['weight'] = this.weight;
-    data['Unit'] = this.unit;
-    data['ft'] = this.ft;
-    data['In.'] = this.In;
-    data['Unit_2'] = this.unit2;
-    return data;
-  }
+Map<String, dynamic> toJson() {
+final Map<String, dynamic> data = new Map<String, dynamic>();
+data['_id'] = this.sId;
+data['name'] = this.name;
+data['email'] = this.email;
+data['phonenumber'] = this.phonenumber;
+data['disabled'] = this.disabled;
+data['roles'] = this.roles;
+data['postcode'] = this.postcode;
+data['aboutme'] = this.aboutme;
+data['age'] = this.age;
+data['gender'] = this.gender;
+data['health_conditions'] = this.healthConditions;
+data['isapproved'] = this.isapproved;
+data['weight'] = this.weight;
+data['Unit'] = this.unit;
+data['ft'] = this.ft;
+data['In'] = this.inch;
+data['Unit2'] = this.unit2;
+return data;
+}
 }

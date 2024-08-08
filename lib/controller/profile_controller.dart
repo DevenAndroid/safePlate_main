@@ -36,25 +36,43 @@ class ProfileController extends GetxController {
       if (value.success == true) {
         log("User data: ${profile.value.user.toString()}");
         //log("User data: ${profile.value.user!.bMI!.inch.toString()}");
-         if(profile.value.user!.bMI != null) {
-           selectUnit = profile.value.user!.bMI!.unit2 ?? "1";
-           selectUnit1 = profile.value.user!.bMI!.unit ?? "1";
-           fitController.text = profile.value.user!.bMI!.ft != null ? double.parse(profile.value.user!.bMI!.ft.toString()).toString():"";
-           inchController.text = profile.value.user!.bMI!.inch != null ? int.parse(profile.value.user!.bMI!.inch.toString()).toString():"";
-           weightController.text = profile.value.user!.bMI!.weight ??"";
-         }
+        //  if(profile.value.user!.bMI != null) {
+        //    selectUnit = profile.value.user!.bMI!.unit2 ?? "1";
+        //    selectUnit1 = profile.value.user!.bMI!.unit ?? "1";
+        //    fitController.text = profile.value.user!.bMI!.ft != null ? double.parse(profile.value.user!.bMI!.ft.toString()).toString():"";
+        //    inchController.text = profile.value.user!.bMI!.inch != null ? int.parse(profile.value.user!.bMI!.inch.toString()).toString():"";
+        //    weightController.text = profile.value.user!.bMI!.weight ??"";
+        //  }
 
         chooseGender = profile.value.user!.gender ?? 'male';
 
         // Populate the controllers
         nameController.text = profile.value.user!.name ?? "";
+        emailController.text = profile.value.user!.email ?? "";
         phoneNumberController.text = profile.value.user!.phonenumber ?? "";
         postcodeController.text = profile.value.user!.postcode != null?int.parse(profile.value.user!.postcode.toString()).toString():"" ;
-        emailController.text = profile.value.user!.email ?? "";
         aboutController.text = profile.value.user!.aboutme ?? "";
-
         ageController.text = profile.value.user!.age != null? int.parse(profile.value.user!.age.toString()).toString():"";
+
+
         heathController.text = profile.value.user!.healthConditions ?? "";
+
+
+
+        ///BMI//
+        weightController.text = profile.value.user!.weight ??"";
+        selectUnit1 = profile.value.user!.unit ?? "1";
+        fitController.text = profile.value.user!.ft != null ? double.parse(profile.value.user!.ft.toString()).toString():"";
+        inchController.text = profile.value.user!.inch != null ? int.parse(profile.value.user!.inch.toString()).toString():"";
+        selectUnit = profile.value.user!.unit2 ?? "1";
+
+
+
+
+
+
+
+
 
         statusOfProfile.value = RxStatus.success();
        // showToast(value.message);

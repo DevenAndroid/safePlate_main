@@ -511,7 +511,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               updateProfileRepo(
                                       name: profileController.nameController.text,
                                       email: profileController.emailController.text,
-                                        age: profileController.ageController.text,
+                                      age: profileController.ageController.text,
                                       phoneNumber: profileController.phoneNumberController.text,
                                       aboutme:profileController.aboutController.text ,
                                       health: profileController.heathController.text,
