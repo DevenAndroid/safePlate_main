@@ -293,11 +293,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 onPressed: () {
                                   mail=emailController.text;
 
-                                  // if (_formKey1.currentState!.validate()) {
-                                  //   login();
-                                  // }else{
-                                  //   showToast("something is went wrong");
-                                  // }
 
                                   if (_formKey1.currentState!.validate()) {
                                     loginRepo(

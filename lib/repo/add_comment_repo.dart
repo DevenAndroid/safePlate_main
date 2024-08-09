@@ -1,28 +1,25 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 import '../model/add_comment_model.dart';
-import '../model/comment_post_model.dart';
-import '../model/like_post_model.dart';
 import '../widget/Api_url.dart';
 import '../widget/helper.dart';
 
-Future<AddCommentModel> commentPOst({required String name, required String message,required String postID,required BuildContext context}) async {
+Future<AddCommentModel> addComment({required String postId,required String message,required username, required BuildContext context}) async {
 
 
   OverlayEntry loader = NewHelper.overlayLoader(context);
   Overlay.of(context).insert(loader);
 
   var map = <String, dynamic>{};
-  map["name"]=name;
+  map["name"]=username;
   map["message"]=message;
+
   try {
     var url =ApiUrl.commentPost ;
     http.Response response = await http.post(
-      Uri.parse('$url$postID'),
+      Uri.parse('$url$postId'),
       body: jsonEncode(map),
       headers: await getAuthHeader(),
     );

@@ -2,6 +2,8 @@
 
 import 'dart:developer';
 
+import 'package:Safeplate/repo/reply_repo.dart';
+import 'package:Safeplate/screen/home/my_post.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,7 +11,11 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../model/add_comment_model.dart';
+import '../../model/reply_model.dart';
 import '../../model/single_post_model.dart';
+import '../../repo/add_comment_repo.dart';
 import '../../repo/single_post_repo.dart';
 import '../../widget/helper.dart';
 
@@ -52,8 +58,8 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
   }
 
 
-
-
+int data = 0;
+String ?commentIDs;
   String formatTime(String dateTime) {
     DateTime parsedDate = DateTime.parse(dateTime);
     DateFormat timeFormat = DateFormat.jm(); // You can use any desired time format here
@@ -63,11 +69,25 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
 
 
   TextEditingController  commentController = TextEditingController();
+  Rx<AddCommentModel> comment = AddCommentModel().obs;
+  Rx<RxStatus> statusOfcomment = RxStatus.empty().obs;
+
+
+  Rx<ReplyModel> reply = ReplyModel().obs;
+  Rx<RxStatus> statusOfreply = RxStatus.empty().obs;
+
   @override
   void initState() {
     singlePost();
+
     super.initState();
   }
+
+ // @override
+  // void dispose() {
+  //   data=1;
+  //   super.dispose();
+  // }
   @override
   Widget build(BuildContext context) {
     var height= MediaQuery.sizeOf(context).height ;
@@ -143,23 +163,24 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                   // Text( single.value.post!.comments!.length.toString()),
                   Text("Comments",style:GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w500, color:Colors.black),),
                   SizedBox(height: height*0.02,),
-                  single.value.post!.comments!.length == 0?
-                  SizedBox(height: 50, width: width,
-                    child:  Text("No Comments Any user"),):
-                  ListView.builder(
+                  single.value.post!.comments!.length == 0
+                      ? SizedBox(height: 50, width: width,
+                    child:  Text("No Comments Any user"),)
+                      : ListView.builder(
                     shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount:   single.value.post!.comments!.length,
+                     physics: const NeverScrollableScrollPhysics(),
+                    itemCount:  single.value.post!.comments!.length,
                     itemBuilder: (context, index) {
                       String formattedTime = formatTime(single.value.post!.comments![index].createdAt.toString());
-
+                      //
                       return Padding(
                           padding: const EdgeInsets.only(bottom: 16),
                           child: Column(
                             children: [
                               Container(
-                                // color: Colors.red,
+                                 // color: Colors.red,
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
                                       children: [
@@ -168,128 +189,106 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                                           child: Image.asset("assets/images/user.png",height:50,width:50,),
                                         ),
                                         SizedBox(width: width*0.03),
-                                        Text( single.value.post!.comments![index].name.toString(),                                      //"Alex smith",
+                                        Text(single.value.post!.comments![index].name.toString(),                                      //"Alex smith",
                                           style: GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w400, color:Colors.black,),),
                                         const Spacer(),
-                                        Text(
-                      formattedTime,
-                                          //single.value.post!.comments![index].createdAt.toString(),
-                                          //"12min",
-                                          style: GoogleFonts.roboto(fontSize: 12, fontWeight: FontWeight.w300, color:Colors.black,),)
+                                        Text(formattedTime,
+                                          style: GoogleFonts.roboto(fontSize: 12, fontWeight: FontWeight.w300, color:Colors.black,),),
                                       ],
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(left: 60,right: 10),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            single.value.post!.comments![index].message.toString(),
-                                            //"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,",
-                                            style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w300, color:Color(0xff545454),),),
-                                          SizedBox(height: height*0.01),
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: InkWell(
-                                                onTap: (){},
-                                                child: Text("Reply",
-                                                  style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w400, color:Colors.black),)),
-                                          )
-                                          // Row(
-                                          //   children: [
-                                          //     InkWell(
-                                          //         onTap: (){},
-                                          //         child: Text("Like" ,
-                                          //           style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w400, color:Colors.black),)),
-                                          //     SizedBox(width: width*0.06),
-                                          //     InkWell(
-                                          //         onTap: (){},
-                                          //         child: Text("Reply",
-                                          //           style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w400, color:Colors.black),))
-                                          //   ],
-                                          // )
-                                        ],
-                                      ),
+                                      padding: const EdgeInsets.only(left:50),
+                                      child: Text(
+                                        single.value.post!.comments![index].message.toString(),
+                                        //"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,",
+                                        style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w300, color:Color(0xff545454),),),
                                     ),
+                                    SizedBox(height: height*0.01),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left:50),
+                                      child: Align(
+                                        alignment: Alignment.topLeft,
+                                        child: InkWell(
+                                            onTap: (){
+                                              setState(() {
+                                                data=1;
+                                                 commentIDs= single.value.post!.comments![index].sId.toString();
+                                              });
+
+                                              print("Data${data}");
+                                            },
+                                            child: Text("Reply",
+                                              style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w400, color:Colors.black),)),
+                                      ),
+                                    )
+                                    // Padding(
+                                    //   padding: const EdgeInsets.only(left: 60,right: 10),
+                                    //   child: Column(
+                                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                                    //     mainAxisAlignment: MainAxisAlignment.start,
+                                    //     children: [
+                                    //
+                                    //     ],
+                                    //   ),
+                                    // ),
+
+
 
                                   ],
                                 ),
                               ),
-                             SizedBox(height: Get.height*0.01),
-                             ListView.builder(
-                               shrinkWrap: true,
-                               itemCount: 1,// single.value.post!.comments![index].replies!.length,
-                               itemBuilder: (context, index) {
-                                 String formattedTime2 = formatTime( single.value.post!.comments![index].replies![0].createdAt.toString(),);
 
-                             //   time = single.value.post!.comments![index].replies![index].createdAt;
-                               return  Padding(
-                                 padding: const EdgeInsets.only(left:30),
-                                 child: Container(
-                                   // color: Colors.blue,
-                                   child: Column(
-                                     children: [
-                                       Row(
-                                         children: [
-                                           ClipRRect(
-                                             borderRadius: BorderRadius.circular(10),
-                                             child: Image.asset("assets/images/user.png",height:40,width:40),
-                                           ),
-                                           SizedBox(width: width*0.03),
-                                           Text(single.value.post!.comments![index].replies![0].name.toString(),                                      //"Alex smith",
-                                             style: GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w400, color:Colors.black,),),
-                                           const Spacer(),
-                                           Text(
-                                             formattedTime2,
-                                            // single.value.post!.comments![index].replies![index].createdAt.toString(),
-                                             //single.value.post!.comments![index].createdAt.toString(),
-                                             //"12min",
-                                             style: GoogleFonts.roboto(fontSize: 12, fontWeight: FontWeight.w300, color:Colors.black,),)
-                                         ],
-                                       ),
-                                       Padding(
-                                         padding: const EdgeInsets.only(left: 60,right: 10),
-                                         child: Column(
-                                           crossAxisAlignment: CrossAxisAlignment.start,
-                                           mainAxisAlignment: MainAxisAlignment.start,
-                                           children: [
-                                             Text(
-                                            single.value.post!.comments![index].replies![0].message.toString(),
-                                             //  single.value.post!.comments![index].message.toString(),
-                                               //"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,",
-                                               style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w300, color:Color(0xff545454),),),
-                                             SizedBox(height: height*0.01),
-                                             Align(
-                                               alignment: Alignment.topLeft,
-                                               child: InkWell(
-                                                   onTap: (){},
-                                                   child: Text("Reply",
-                                                     style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w400, color:Colors.black),)),
-                                             )
-                                             // Row(
-                                             //   children: [
-                                             //     // InkWell(
-                                             //     //     onTap: (){},
-                                             //     //     child: Text("Like" ,
-                                             //     //       style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w400, color:Colors.black),)),
-                                             //     // SizedBox(width: width*0.06),
-                                             //     InkWell(
-                                             //         onTap: (){},
-                                             //         child: Text("Reply",
-                                             //           style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w400, color:Colors.black),))
-                                             //   ],
-                                             // )
-                                           ],
-                                         ),
-                                       ),
+                              single.value.post!.comments![index].replies!.isEmpty?
+                              const SizedBox(height:0,width: 0,):
+                              ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount:
+                                //single.value.post!.comments![index].replies!.length,
+                                1, //single.value.post!.comments![index].replies!.length,
+                                itemBuilder: (context, index) {
+                                 String formattedTime2 = formatTime( single.value.post!.comments![index].replies![index].createdAt.toString(),);
 
-                                     ],
-                                   ),
+                                  return  Padding(
+                                    padding: const EdgeInsets.only(left:30,top: 2),
+                                    child: Container(
+                                      // color: Colors.blue,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 4),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius: BorderRadius.circular(10),
+                                                  child: Image.asset("assets/images/user.png",height:40,width:40),
+                                                ),
+                                                SizedBox(width: width*0.03),
+                                                Text(single.value.post!.comments![index].replies![index].name.toString(),                                      //"Alex smith",
+                                                  style: GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w400, color:Colors.black,),),
+                                                const Spacer(),
+                                                Text(
+                                                  // "",
+                                                 formattedTime2,
+                                                  style: GoogleFonts.roboto(fontSize: 12, fontWeight: FontWeight.w300, color:Colors.black,),)
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(left:50),
+                                              child: Text(
+                                                single.value.post!.comments![index].replies![index].message.toString(),
+                                                style:GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w300, color:Color(0xff545454),),),
+                                            ),
 
-                                 ),
-                               );
-                             },)
+                                          ],
+                                        ),
+                                      ),
+
+                                    ),
+                                  );
+                                },)
+
                             ],
                           ),
                         );
@@ -297,66 +296,144 @@ class _SinglePostScreenState extends State<SinglePostScreen> {
                     },)
                   ,
 
-                  SizedBox(height: height*0.05,),
+                   SizedBox(height: height*0.05,),
 
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.green,width: 2),
-                      borderRadius: BorderRadius.circular(4.0),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: SizedBox(
-                            height: 60,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 4.0),
-                              child: TextFormField(
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.green,width: 2),
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: SizedBox(
+                              height: 60,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 4.0),
+                                child: TextFormField(
 
-                                controller: commentController,
-                                decoration: InputDecoration(
+                                  controller: commentController,
+                                  decoration: InputDecoration(
 
-                                    hintText: 'Post Comment',
-                                    border: InputBorder.none,
-                                    hintStyle: GoogleFonts.roboto(
-                                        fontSize:19,
-                                        fontWeight:FontWeight.w400
-                                    )
+                                      hintText: 'Post Comment',
+                                      border: InputBorder.none,
+                                      hintStyle: GoogleFonts.roboto(
+                                          fontSize:19,
+                                          fontWeight:FontWeight.w400
+                                      )
 
-                                ),
-                              ),//trtyryufyuft
+                                  ),
+                                ),//trtyryufyuft
+                              ),
                             ),
                           ),
-                        ),
-                        SvgPicture.asset("assets/icons/Emojis.svg"),
-                        SizedBox(width: 15,),
-                        GestureDetector(
-                            onTap: (){
-                              // print("iddddddddddddddd${widget.id.toString()}");
-                              //
-                              // commentPOst(
-                              //   name: model2.value.post.comments.,
-                              //     productId:  widget.id.toString(),
-                              //     context: context, message:commentController.text )
-                              //     .then((value) {
-                              //   model2.value = value;
-                              //   if (value.success == true) {
-                              //     showToast(value.message);
-                              //     statusOfcomment.value = RxStatus.success();
-                              //     getData();
-                              //   } else {
-                              //     showToast(value.message);
-                              //     statusOfcomment.value = RxStatus.error();
-                              //   }
-                              // });
-                            },
-                            child: SvgPicture.asset("assets/icons/Send.svg"))
-                      ],
+                          SvgPicture.asset("assets/icons/Emojis.svg"),
+                          SizedBox(width: 15,),
+
+
+                          data ==0 ?
+                          GestureDetector(
+
+
+                              onTap: () async {
+                                print("Comment");
+                                SharedPreferences pref = await SharedPreferences.getInstance();
+                                String userName = pref.getString("name")!.toString();
+                                print("name${single.value.post!.sId.toString()}");
+                                print("id${userName}");
+                                print("message:${commentController.text}");
+                                addComment(postId:single.value.post!.sId.toString(),
+                                    username: userName,
+                                    message: commentController.text,context: context)
+                                    .then((value){
+                                  comment.value = value;
+                                  if(value.success == true){
+                                    showToast(value.message);
+                                    statusOfcomment.value = RxStatus.success();
+                                    singlePost();
+                                    commentController.clear();
+                                  }else{
+                                    showToast(value.message);
+                                    statusOfcomment.value = RxStatus.error();
+                                  }
+                                  //com.value = value;
+                                });
+                                // print("iddddddddddddddd${widget.id.toString()}");
+                                //
+                                // commentPOst(
+                                //   name: model2.value.post.comments.,
+                                //     productId:  widget.id.toString(),
+                                //     context: context, message:commentController.text )
+                                //     .then((value) {
+                                //   model2.value = value;
+                                //   if (value.success == true) {
+                                //     showToast(value.message);
+                                //     statusOfcomment.value = RxStatus.success();
+                                //     getData();
+                                //   } else {
+                                //     showToast(value.message);
+                                //     statusOfcomment.value = RxStatus.error();
+                                //   }
+                                // });
+                              },
+                              child: SvgPicture.asset("assets/icons/Send.svg"))
+                         : GestureDetector(
+
+                              onTap: () async {
+
+                                SharedPreferences pref = await SharedPreferences.getInstance();
+                                String userName = pref.getString("name")!.toString();
+                                print("name${single.value.post!.sId.toString()}");
+                                print("id${userName}");
+                                print("message:${commentController.text}");
+                                print("commentid:${commentIDs.toString()}");
+                                replyRepo(
+                                    postId:single.value.post!.sId.toString(),
+                                    username: userName,
+                                    commentID:commentIDs.toString(),
+                                    message: commentController.text,context: context)
+                                    .then((value){
+                                  reply.value = value;
+                                  if(value.success == true){
+                                    showToast(value.message);
+                                    statusOfreply.value = RxStatus.success();
+                                    singlePost();
+                                    commentController.clear();
+                                    Get.to(()=>const MyPostScreen());
+                                  }else{
+                                    showToast(value.message);
+                                    statusOfreply.value = RxStatus.error();
+                                  }
+                                      //com.value = value;
+                                });
+                                // print("iddddddddddddddd${widget.id.toString()}");
+                                //
+                                // commentPOst(
+                                //   name: model2.value.post.comments.,
+                                //     productId:  widget.id.toString(),
+                                //     context: context, message:commentController.text )
+                                //     .then((value) {
+                                //   model2.value = value;
+                                //   if (value.success == true) {
+                                //     showToast(value.message);
+                                //     statusOfcomment.value = RxStatus.success();
+                                //     getData();
+                                //   } else {
+                                //     showToast(value.message);
+                                //     statusOfcomment.value = RxStatus.error();
+                                //   }
+                                // });
+                              },
+                              child: SvgPicture.asset("assets/icons/Send.svg"))
+                        ],
+                      ),
                     ),
                   ),
 
-                  SizedBox(height: height*0.05,),
+                 // SizedBox(height: height*0.05,),
                 ],
               )
 

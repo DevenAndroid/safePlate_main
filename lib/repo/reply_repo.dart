@@ -1,28 +1,26 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
-import '../model/add_comment_model.dart';
-import '../model/comment_post_model.dart';
-import '../model/like_post_model.dart';
+import '../model/reply_model.dart';
 import '../widget/Api_url.dart';
 import '../widget/helper.dart';
 
-Future<AddCommentModel> commentPOst({required String name, required String message,required String postID,required BuildContext context}) async {
+Future<ReplyModel> replyRepo({required String postId,required String message,required username,required commentID, required BuildContext context}) async {
 
 
   OverlayEntry loader = NewHelper.overlayLoader(context);
   Overlay.of(context).insert(loader);
 
   var map = <String, dynamic>{};
-  map["name"]=name;
+  map["name"]=username;
   map["message"]=message;
+  map["commentId"]=commentID;
+
   try {
     var url =ApiUrl.commentPost ;
     http.Response response = await http.post(
-      Uri.parse('$url$postID'),
+      Uri.parse('$url$postId'),
       body: jsonEncode(map),
       headers: await getAuthHeader(),
     );
@@ -30,10 +28,10 @@ Future<AddCommentModel> commentPOst({required String name, required String messa
     if (response.statusCode == 200) {
       NewHelper.hideLoader(loader);
       log('Response Body: ${response.body}');
-      return AddCommentModel.fromJson(jsonDecode(response.body));
+      return ReplyModel.fromJson(jsonDecode(response.body));
     } else {
       NewHelper.hideLoader(loader);
-      return AddCommentModel.fromJson(jsonDecode(response.body));
+      return ReplyModel.fromJson(jsonDecode(response.body));
     }
   } catch (e) {
     NewHelper.hideLoader(loader);
