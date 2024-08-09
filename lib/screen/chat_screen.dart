@@ -1,5 +1,7 @@
 import 'package:Safeplate/screen/login_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,7 +9,7 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../controller/profile_controller.dart';
-
+String?textType;
 class ChatScreen extends StatefulWidget {
 
   static const route = "/chatScreen";
@@ -16,6 +18,7 @@ class ChatScreen extends StatefulWidget {
   String?age;
   String?weight;
   String?Gender;
+
 
    ChatScreen({super.key,this.name,this.age,this.health,this.weight,this.Gender});
 
@@ -29,12 +32,20 @@ class _ChatScreenState extends State<ChatScreen> {
   final model = GenerativeModel(model: 'gemini-pro', apiKey: apiKey);
   final List<Message> _messages = [];
   String? _userName;
+  List<String> questionList = [
+    'What is your name?',
+    'How old are you?',
+    'Where do you live?',
+    'What is your favorite color?',
+    'What is your hobby?'
+  ];
 
 
   final profileController = Get.put(ProfileController());
 
   Future<void> sendMessage({String? message}) async {
-    final userMessage = message ?? _userInput.text;
+    // final userMessage = message ?? _userInput.text;
+    final userMessage = message ?? textType.toString();
 
     if (userMessage.isNotEmpty) {
       setState(() {
@@ -71,6 +82,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
 
+
   @override
   void initState() {
     super.initState();
@@ -96,6 +108,7 @@ class _ChatScreenState extends State<ChatScreen> {
       }
     });
   }
+  bool isChecked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -173,18 +186,32 @@ class _ChatScreenState extends State<ChatScreen> {
               children: [
                 Expanded(
                   flex: 15,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.green, width: 2),
-                      borderRadius: BorderRadius.circular(4.0),
-                    ),
-                    child: TextFormField(
-                      style: const TextStyle(color: Colors.black),
-                      controller: _userInput,
-                      decoration: const InputDecoration(
-                        hintText: 'Type a message',
-                        border: InputBorder.none,
+                  child: GestureDetector(
+                    onTap: (){
+
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.green, width: 2),
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      child: GestureDetector(
+                        onTap: (){
+                          _showDialog();
+                        },
+                        child: Container(
+                          height: 50,color: Colors.red,
+                        ),
+                        // child: TextFormField(
+                        //   style: const TextStyle(color: Colors.black),
+                        //   controller: _userInput,
+                        //   decoration: const InputDecoration(
+                        //     hintText: 'Type a message',
+                        //     border: InputBorder.none,
+                        //
+                        //   ),
+                        // ),
                       ),
                     ),
                   ),
@@ -208,6 +235,58 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ],
       ),
+    );
+  }
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+
+          title: Text('Confirmation'),
+          content: Container(
+             height: 180,
+            color: Colors.blue,
+            child: SizedBox(
+               height: 160,
+              child: SingleChildScrollView(
+                child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: questionList.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                  return GestureDetector(
+                      onTap: (){
+                         textType =questionList.toString() ;
+                      },
+                      child: Text(questionList.toString(),style: TextStyle(fontSize: 10),));
+                },),
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Get.back();
+              },
+            ),
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                if (isChecked) {
+                  // Perform the action if the checkbox is checked
+                  Get.back(); // Close the dialog
+                } else {
+                  // Show a message if the checkbox is not checked
+                  Get.snackbar('Alert', 'You need to agree to the terms first.',
+                      snackPosition: SnackPosition.BOTTOM);
+                }
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

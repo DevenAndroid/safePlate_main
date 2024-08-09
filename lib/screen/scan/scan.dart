@@ -445,12 +445,17 @@
 // }
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:barcode_scan2/barcode_scan2.dart'; // Import the barcode scanning package
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import '../../controller/profile_controller.dart';
 
@@ -495,19 +500,18 @@ class _SacanScreenState extends State<SacanScreen> {
       if (prompt.text.isNotEmpty) {
         getData(result, prompt.text);
       } else {
-        getData(result,
-            'name:${widget.name.toString()},health issue:${widget.health.toString()},age:${widget.age.toString()},weight:${widget.weight.toString()} I need to know whether this food is right for me or not according to my details. If not, then why?');
+        String profilePrompt =
+            'name:${widget.name.toString()},health issue:${widget.health.toString()},age:${widget.age.toString()},weight:${widget.weight.toString()} I need to know whether this food is right for me or not according to my details. If not, then why?';
+        getData(result, profilePrompt);
       }
     }
   }
 
   Future<String> convertImageToBase64(XFile image) async {
     try {
-      // Read the image file
       final imageBytes = await File(image.path).readAsBytes();
-
-      // Convert image bytes to base64 string
       final base64Image = base64Encode(imageBytes);
+      print("object>>>>>>>>>${base64Image}");
       return base64Image;
     } catch (e) {
       print("Error converting image to Base64: ${e.toString()}");
@@ -568,11 +572,7 @@ class _SacanScreenState extends State<SacanScreen> {
       setState(() {
         barcodeResult = result.rawContent;
       });
-
-      // Convert the barcode result to Base64
       String base64Barcode = base64Encode(utf8.encode(barcodeResult));
-
-      // Use the Base64-encoded barcode in your request
       getBarcodeData(base64Barcode);
     } catch (e) {
       setState(() {
@@ -587,12 +587,15 @@ class _SacanScreenState extends State<SacanScreen> {
       mytext = 'Fetching data for barcode...';
     });
 
-    // Prepare the request data with Base64-encoded barcode
     final data = {
       "contents": [
         {
           "parts": [
-            {"text": 'Barcode: $base64Barcode'}
+            {"text": 'Barcode: $base64Barcode'},
+            {
+              "text":
+                  'name:${widget.name.toString()},health issue:${widget.health.toString()},age:${widget.age.toString()},weight:${widget.weight.toString()}'
+            }
           ]
         }
       ],
@@ -632,143 +635,86 @@ class _SacanScreenState extends State<SacanScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Google Gemini',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.black,
-        actions: [
-          Row(
-            children: [
-              IconButton(
-                  onPressed: () {
-                    getImage(ImageSource.camera);
-                  },
-                  icon: const Icon(
-                    Icons.camera,
-                    color: Colors.white,
-                  )),
-              const SizedBox(width: 15,),
-              IconButton(
-                  onPressed: () {
-                    getImage(ImageSource.gallery);
-                  },
-                  icon: const Icon(
-                    Icons.photo,
-                    color: Colors.white,
-                  )),
-              const SizedBox(width: 15,),
-              IconButton(
-                  onPressed: () {
-                    scanBarcode(); // Call the barcode scan function
-                  },
-                  icon: const Icon(
-                    Icons.qr_code,
-                    color: Colors.white,
-                  )),
-            ],
+        toolbarHeight: 80,
+        elevation: 0,
+        titleSpacing: 0,
+        backgroundColor: Color(0xff75D051),
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
           ),
-          const SizedBox(
-            width: 10,
-          )
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: ListView(
-          children: [
-            pickedImage == null
-                ? Container(
-                height: 340,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 2.0,
-                  ),
-                ),
-                child: const Center(
-                  child: Text(
-                    'No Image Selected',
-                    style: TextStyle(fontSize: 22),
-                  ),
-                ))
-                : Container(
-                height: 340,
-                child: Center(
-                    child: Image.file(
-                      File(pickedImage!.path),
-                      height: 400,
-                    ))),
-            const SizedBox(height: 20),
-            TextField(
-              controller: prompt,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: const BorderSide(
-                    color: Colors.black,
-                    width: 2.0,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: const BorderSide(
-                    color: Colors.black,
-                    width: 2.0,
-                  ),
-                ),
-                prefixIcon: const Icon(
-                  Icons.pending_sharp,
-                  color: Colors.black,
-                ),
-                hintText: 'Enter your prompt here',
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton.icon(
-              onPressed: () {
-                if (pickedImage != null) {
-                  getData(pickedImage!, prompt.text);
-                } else {
-                  setState(() {
-                    mytext = 'Please select an image first';
-                  });
-                }
-              },
-              icon: const Icon(
-                Icons.generating_tokens_rounded,
-                color: Colors.white,
-              ),
-              label: const Padding(
-                padding: EdgeInsets.all(10),
-                child: Text(
-                  'Generate Answer',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-              ),
-            ),
-            const SizedBox(height: 30),
-            scanning
-                ? const Padding(
-              padding: EdgeInsets.only(top: 60),
-              child: Center(
-                  child: SpinKitThreeBounce(
-                    color: Colors.black,
-                    size: 20,
-                  )),
-            )
-                : Text(mytext,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 20)),
-          ],
         ),
+        title: Text(
+          "Scan",
+          style: GoogleFonts.roboto(
+              fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
+        ),
+
+      ),
+      body: Column(
+        children: [
+          Expanded(flex: 2,child: scanBarcode()),
+          Expanded(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: ListView(
+                    children: [
+                      const SizedBox(height: 30),
+                      Row(
+                        children: [
+                          GestureDetector(
+                              onTap: (){
+                                getImage( ImageSource.gallery);
+                              },
+
+                              child: SvgPicture.asset("assets/icons/scanner_camera.svg")),
+                          SizedBox(
+                            width: Get.height * 0.1,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              getImage( ImageSource.camera);
+                            },
+                            child: SvgPicture.asset(
+                              "assets/icons/scanner_galler.svg",
+                              height: 50,
+                            ),
+                          ),
+                        ],
+                      ),
+                      scanning
+                          ? const Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Center(
+                                child: SpinKitFadingCircle(
+                                  color: Colors.black,
+                                  size: 50.0,
+                                ),
+                              ),
+                            )
+                          : Container(
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
+                                mytext,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
