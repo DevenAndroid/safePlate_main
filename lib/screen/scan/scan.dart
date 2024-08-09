@@ -450,18 +450,19 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:barcode_scan2/barcode_scan2.dart'; // Import the barcode scanning package
 
 import '../../controller/profile_controller.dart';
 
 class SacanScreen extends StatefulWidget {
-  String?name;
-  String?health;
-  String?age;
-  String?weight;
+  String? name;
+  String? health;
+  String? age;
+  String? weight;
 
-   static var route = "/qrCode";
+  static var route = "/qrCode";
 
-   SacanScreen({super.key,this.name,this.age,this.health,this.weight});
+  SacanScreen({super.key, this.name, this.age, this.health, this.weight});
 
   @override
   State<SacanScreen> createState() => _SacanScreenState();
@@ -471,14 +472,12 @@ class _SacanScreenState extends State<SacanScreen> {
   XFile? pickedImage;
   String mytext = '';
   bool scanning = false;
-
+  String barcodeResult = '';
 
   final profileController = Get.put(ProfileController());
   TextEditingController prompt = TextEditingController();
 
   final ImagePicker _imagePicker = ImagePicker();
-
-  static const apiKey = "AIzaSyCiDGfFN-tCfYrF52weQZ0Lbv8_UcmNbA4";
   final apiUrl =
       'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyCiDGfFN-tCfYrF52weQZ0Lbv8_UcmNbA4';
 
@@ -493,16 +492,26 @@ class _SacanScreenState extends State<SacanScreen> {
       setState(() {
         pickedImage = result;
       });
-      // Automatically generate profile details and response
       if (prompt.text.isNotEmpty) {
         getData(result, prompt.text);
       } else {
-        // Provide a default prompt if none is entered
-        getData(result, 'name:${widget.name.toString()},health issue:${widget.health..toString()},age:${widget.age.toString()},weight:${widget.weight.toString()}'
-            'I need to know whether this food is right for me or not according to my details. If not, then why?');
-
-
+        getData(result,
+            'name:${widget.name.toString()},health issue:${widget.health.toString()},age:${widget.age.toString()},weight:${widget.weight.toString()} I need to know whether this food is right for me or not according to my details. If not, then why?');
       }
+    }
+  }
+
+  Future<String> convertImageToBase64(XFile image) async {
+    try {
+      // Read the image file
+      final imageBytes = await File(image.path).readAsBytes();
+
+      // Convert image bytes to base64 string
+      final base64Image = base64Encode(imageBytes);
+      return base64Image;
+    } catch (e) {
+      print("Error converting image to Base64: ${e.toString()}");
+      return '';
     }
   }
 
@@ -513,8 +522,7 @@ class _SacanScreenState extends State<SacanScreen> {
     });
 
     try {
-      List<int> imageBytes = File(image.path).readAsBytesSync();
-      String base64File = base64.encode(imageBytes);
+      String base64File = await convertImageToBase64(image);
 
       final data = {
         "contents": [
@@ -540,7 +548,66 @@ class _SacanScreenState extends State<SacanScreen> {
         });
       } else {
         setState(() {
-          mytext = 'Response status : ${response.statusCode}';
+          mytext = 'Failed to fetch data: ${response.statusCode}';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        mytext = 'Error occurred: ${e.toString()}';
+      });
+    } finally {
+      setState(() {
+        scanning = false;
+      });
+    }
+  }
+
+  scanBarcode() async {
+    try {
+      var result = await BarcodeScanner.scan();
+      setState(() {
+        barcodeResult = result.rawContent;
+      });
+
+      // Convert the barcode result to Base64
+      String base64Barcode = base64Encode(utf8.encode(barcodeResult));
+
+      // Use the Base64-encoded barcode in your request
+      getBarcodeData(base64Barcode);
+    } catch (e) {
+      setState(() {
+        barcodeResult = 'Error occurred: ${e.toString()}';
+      });
+    }
+  }
+
+  getBarcodeData(String base64Barcode) async {
+    setState(() {
+      scanning = true;
+      mytext = 'Fetching data for barcode...';
+    });
+
+    // Prepare the request data with Base64-encoded barcode
+    final data = {
+      "contents": [
+        {
+          "parts": [
+            {"text": 'Barcode: $base64Barcode'}
+          ]
+        }
+      ],
+    };
+
+    try {
+      final response = await http.post(Uri.parse(apiUrl), headers: header, body: jsonEncode(data));
+      if (response.statusCode == 200) {
+        var result = jsonDecode(response.body);
+        setState(() {
+          mytext = result['candidates'][0]['content']['parts'][0]['text'];
+        });
+      } else {
+        setState(() {
+          mytext = 'Failed to fetch data: ${response.statusCode}';
         });
       }
     } catch (e) {
@@ -556,7 +623,6 @@ class _SacanScreenState extends State<SacanScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     profileController.getProfile();
     print("object>>>${widget.name.toString()}");
@@ -572,14 +638,36 @@ class _SacanScreenState extends State<SacanScreen> {
         ),
         backgroundColor: Colors.black,
         actions: [
-          IconButton(
-              onPressed: () {
-                getImage(ImageSource.gallery);
-              },
-              icon: const Icon(
-                Icons.photo,
-                color: Colors.white,
-              )),
+          Row(
+            children: [
+              IconButton(
+                  onPressed: () {
+                    getImage(ImageSource.camera);
+                  },
+                  icon: const Icon(
+                    Icons.camera,
+                    color: Colors.white,
+                  )),
+              const SizedBox(width: 15,),
+              IconButton(
+                  onPressed: () {
+                    getImage(ImageSource.gallery);
+                  },
+                  icon: const Icon(
+                    Icons.photo,
+                    color: Colors.white,
+                  )),
+              const SizedBox(width: 15,),
+              IconButton(
+                  onPressed: () {
+                    scanBarcode(); // Call the barcode scan function
+                  },
+                  icon: const Icon(
+                    Icons.qr_code,
+                    color: Colors.white,
+                  )),
+            ],
+          ),
           const SizedBox(
             width: 10,
           )
@@ -640,7 +728,13 @@ class _SacanScreenState extends State<SacanScreen> {
             const SizedBox(height: 20),
             ElevatedButton.icon(
               onPressed: () {
-                getData(pickedImage!, prompt.text);
+                if (pickedImage != null) {
+                  getData(pickedImage!, prompt.text);
+                } else {
+                  setState(() {
+                    mytext = 'Please select an image first';
+                  });
+                }
               },
               icon: const Icon(
                 Icons.generating_tokens_rounded,
@@ -679,3 +773,6 @@ class _SacanScreenState extends State<SacanScreen> {
     );
   }
 }
+
+
+
