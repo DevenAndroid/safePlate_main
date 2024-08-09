@@ -14,6 +14,7 @@ String token = "";
 Future<LoginModel> loginRepo(
     {required String email,
       required String password,
+      required String tokenid,
       required BuildContext context}) async {
 
   OverlayEntry loader = NewHelper.overlayLoader(context);
@@ -28,6 +29,7 @@ Future<LoginModel> loginRepo(
   final headers = {
     HttpHeaders.contentTypeHeader: 'application/json',
     HttpHeaders.acceptHeader: 'application/json',
+   'deviceToken':tokenid
     // HttpHeaders.authorizationHeader: 'Bearer ${user.accessToken}'
     // 'deviceToken':deviceID,
   };

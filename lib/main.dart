@@ -16,10 +16,10 @@ import 'package:pushy_flutter/pushy_flutter.dart';
    Pushy.setAppId('66b1fc0ca9865505291e5381');
 
    // Start the Pushy service and get the token
-   String token;
+   String DeviceToken;
    try {
-     token = await Pushy.register();
-     print('Device token: $token');
+     DeviceToken = await Pushy.register();
+     print('Device token: $DeviceToken');
 
      // Optionally send the token to your backend server
      // await sendTokenToServer(token);

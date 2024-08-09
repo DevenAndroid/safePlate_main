@@ -11,6 +11,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pushy_flutter/pushy_flutter.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../repo/signup_resend_otp_repo.dart';
@@ -38,10 +39,31 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passwordController = TextEditingController();
   final _formKey1 = GlobalKey<FormState>();
   String currentMessage = '';
+  String? DeviceToken;
+  pushy() async{
+      WidgetsFlutterBinding.ensureInitialized();
+      // Initialize the Pushy SDK
+      Pushy.listen();
+      // Set the App ID from Pushy Dashboard
+      Pushy.setAppId('66b1fc0ca9865505291e5381');
+      // Start the Pushy service and get the token
+
+      try {
+        DeviceToken = await Pushy.register();
+        print('Device token =>>: $DeviceToken');
+        // Optionally send the token to your backend server
+        // await sendTokenToServer(token);
+      } catch (error) {
+        print('Pushy registration error=>>: $error');
+      }
+
+
+  }
+
 
   void initState() {
-    // TODO: implement initState
     super.initState();
+    pushy();
   }
 
   @override
@@ -281,6 +303,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     loginRepo(
                                         email: emailController.text,
                                         password: passwordController.text,
+                                        tokenid: DeviceToken.toString(),
 
                                         context: context
                                     )
